@@ -11,24 +11,24 @@ namespace DataPipelineApi.HealthChecks;
 
 public class MinioHealthCheck : IHealthCheck
 {
-  private readonly MinioOptions _options;
+    private readonly MinioOptions _options;
 
-  public MinioHealthCheck(IOptions<MinioOptions> options) => _options = options.Value;
+    public MinioHealthCheck(IOptions<MinioOptions> options) => _options = options.Value;
 
-  public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-  {
-    try
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-      using var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey,
-        new AmazonS3Config { ServiceURL = $"http://{_options.Endpoint}", ForcePathStyle = true, Timeout = TimeSpan.FromSeconds(15) });
+        try
+        {
+            using var client = new AmazonS3Client(_options.AccessKey, _options.SecretKey,
+              new AmazonS3Config { ServiceURL = $"http://{_options.Endpoint}", ForcePathStyle = true, Timeout = TimeSpan.FromSeconds(15) });
 
-      var buckets = await client.ListBucketsAsync(cancellationToken);
-      var hasBuckets = buckets.Buckets.Any(b => b.BucketName == _options.BucketRaw || b.BucketName == _options.BucketProcessed);
-      return hasBuckets ? HealthCheckResult.Healthy() : HealthCheckResult.Degraded("MinIO reachable but buckets missing");
+            var buckets = await client.ListBucketsAsync(cancellationToken);
+            var hasBuckets = buckets.Buckets.Any(b => b.BucketName == _options.BucketRaw || b.BucketName == _options.BucketProcessed);
+            return hasBuckets ? HealthCheckResult.Healthy() : HealthCheckResult.Degraded("MinIO reachable but buckets missing");
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("MinIO unreachable", ex);
+        }
     }
-    catch (Exception ex)
-    {
-      return HealthCheckResult.Unhealthy("MinIO unreachable", ex);
-    }
-  }
 }

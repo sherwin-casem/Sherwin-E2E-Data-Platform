@@ -1,68 +1,48 @@
-import os
-import feast
-import pandas as pd
-from feast import FeatureStore, Entity, FeatureView, Field
-from feast.types import Float32, Int64
-from datetime import datetime
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col, avg, max
-from pyspark.sql.types import StructType, StructField, StringType, LongType, DoubleType
-from kafka import KafkaConsumer
+"""
+Feature Store stub using Feast for real-time ML feature serving.
+
+This module demonstrates how to consume Kafka streaming data,
+compute aggregate features, and store them in a Feast feature store
+for real-time model inference.
+
+Note: Requires a running Feast feature store with proper configuration.
+"""
+
 import json
+import logging
+import os
+from datetime import datetime
 
-# Feast Configuration
-FEAST_REPO_PATH = os.getenv("FEAST_REPO_PATH", "./feature_repo")
-store = FeatureStore(repo_path=FEAST_REPO_PATH)
+import pandas as pd
 
-# Kafka Configuration
-KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:29092")
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "sensor_readings")
-
-# Initialize Spark Session
-spark = SparkSession.builder \
-    .appName("StreamingFeatureProcessing") \
-    .getOrCreate()
-
-# Define Schema for incoming JSON sensor readings
-schema = StructType([
-    StructField("event_id", StringType(), True),
-    StructField("timestamp", LongType(), True),
-    StructField("device_id", Int64(), True),
-    StructField("reading_value", Float32(), True)
-])
-
-# Define Feast Entity
-device_entity = Entity(
-    name="device_id",
-    value_type=Int64,
-    description="Unique identifier for IoT devices"
-)
-
-# Define Feast Feature View for storing real-time features
-device_feature_view = FeatureView(
-    name="device_features",
-    entities=["device_id"],
-    schema=[
-        Field(name="avg_reading", dtype=Float32),
-        Field(name="max_reading", dtype=Float32),
-        Field(name="timestamp", dtype=Int64)
-    ],
-    online=True,  # Enable real-time serving
-)
+FEAST_REPO_PATH = os.getenv("FEAST_REPO_PATH", "./feature_repo")
 
 
 def consume_stream_and_store_features():
-    """
-    Consumes real-time Kafka messages, extracts features, and stores in Feast Feature Store.
-    """
-    # Connect to Kafka
+    """Consume Kafka messages, compute features, and store in Feast."""
+    from feast import FeatureStore
+
+    from kafka import KafkaConsumer
+
+    store = FeatureStore(repo_path=FEAST_REPO_PATH)
+
     consumer = KafkaConsumer(
         KAFKA_TOPIC,
         bootstrap_servers=[KAFKA_BROKER],
-        value_deserializer=lambda v: json.loads(v.decode('utf-8'))
+        value_deserializer=lambda v: json.loads(v.decode("utf-8")),
+        auto_offset_reset="latest",
+        group_id="feature_store_consumer",
     )
 
-    print(f"✅ Listening for sensor data on Kafka topic: {KAFKA_TOPIC}")
+    logger.info("Consuming '%s' for feature extraction...", KAFKA_TOPIC)
 
     for message in consumer:
         data = message.value
@@ -70,52 +50,44 @@ def consume_stream_and_store_features():
         reading_value = data.get("reading_value")
 
         if device_id is None or reading_value is None:
-            continue  # Skip malformed data
+            continue
 
-        # Fetch existing features from Feast for incremental updates
-        existing_features = store.get_online_features(
-            features=["device_features:avg_reading", "device_features:max_reading"],
-            entity_rows=[{"device_id": device_id}]
-        ).to_dict()
+        feature_data = pd.DataFrame(
+            [
+                {
+                    "device_id": device_id,
+                    "avg_reading": float(reading_value),
+                    "max_reading": float(reading_value),
+                    "timestamp": int(datetime.utcnow().timestamp()),
+                }
+            ]
+        )
 
-        # Compute new aggregate features
-        avg_reading = (existing_features["device_features:avg_reading"][0] or 0 + reading_value) / 2
-        max_reading = max(existing_features["device_features:max_reading"][0] or 0, reading_value)
-
-        # Prepare DataFrame for Feast ingestion
-        feature_data = pd.DataFrame([{
-            "device_id": device_id,
-            "avg_reading": avg_reading,
-            "max_reading": max_reading,
-            "timestamp": int(datetime.utcnow().timestamp())
-        }])
-
-        # Store in Feast
-        store.apply([device_entity, device_feature_view])
-        store.ingest("device_features", feature_data)
-
-        print(f"✅ Stored features for device {device_id}: {feature_data.to_dict(orient='records')}")
+        try:
+            store.ingest("device_features", feature_data)
+            logger.info("Stored features for device %s", device_id)
+        except Exception as e:
+            logger.error("Failed to ingest features: %s", e)
 
 
 def get_features(device_ids):
-    """
-    Fetch stored features for given device_ids from the Feast Feature Store.
-    """
+    """Fetch stored features for given device_ids from Feast."""
+    from feast import FeatureStore
+
+    store = FeatureStore(repo_path=FEAST_REPO_PATH)
+
     feature_refs = [
         "device_features:avg_reading",
         "device_features:max_reading",
-        "device_features:timestamp"
     ]
 
-    # Fetch real-time features for the given devices
     feature_vector = store.get_online_features(
         features=feature_refs,
-        entity_rows=[{"device_id": device_id} for device_id in device_ids]
+        entity_rows=[{"device_id": did} for did in device_ids],
     ).to_dict()
 
     return feature_vector
 
 
 if __name__ == "__main__":
-    # Start consuming and storing real-time features
     consume_stream_and_store_features()
