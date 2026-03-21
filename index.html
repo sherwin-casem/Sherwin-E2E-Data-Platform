@@ -206,17 +206,49 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">High-Level System Architecture</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            graph TB subgraph "Data Sources" BS[Batch Sources<br />MySQL, Files, CSV/JSON/XML] SS[Streaming Sources<br />Kafka
-            Events, IoT, Social Media] end subgraph "Ingestion & Orchestration" AIR[Apache Airflow<br />DAG
-            Orchestration] KAF[Apache Kafka<br />Event Streaming] end subgraph "Processing Layer" SPB[Spark Batch<br />Large-scale
-            ETL] SPS[Spark Streaming<br />Real-time Processing] GE[Great Expectations<br />Data Quality] end subgraph
-            "Storage Layer" MIN[MinIO<br />S3-Compatible Storage] PG[PostgreSQL<br />Analytics Database] S3[AWS S3<br />Cloud
-            Storage] MDB[MongoDB<br />NoSQL Store] IDB[InfluxDB<br />Time-series DB] end subgraph "Monitoring &
-            Governance" PROM[Prometheus<br />Metrics Collection] GRAF[Grafana<br />Dashboards] ATL[Apache Atlas<br />Data
-            Lineage] end subgraph "ML & Serving" MLF[MLflow<br />Model Tracking] FST[Feast<br />Feature Store] BI[BI
-            Tools<br />Tableau/PowerBI/Looker] end BS --> AIR SS --> KAF AIR --> SPB KAF --> SPS SPB --> GE SPS --> GE
-            GE --> MIN GE --> PG MIN --> S3 PG --> MDB PG --> IDB SPB --> PROM SPS --> PROM PROM --> GRAF SPB --> ATL
-            SPS --> ATL PG --> MLF PG --> FST PG --> BI MIN --> MLF
+graph TB
+  subgraph Sources
+    BS[Batch Sources - MySQL]
+    SS[Streaming - Kafka]
+  end
+  subgraph Orchestration
+    AIR[Apache Airflow - 3 DAGs]
+    KAF[Apache Kafka 7.5.0]
+  end
+  subgraph Processing
+    SPB[Spark Batch ETL]
+    SPS[Spark Streaming]
+    GE[Great Expectations]
+  end
+  subgraph Storage
+    MIN[MinIO - S3 Storage]
+    PG[PostgreSQL 15]
+    MDB[MongoDB 6.0]
+    IDB[InfluxDB 2.7]
+    RED[Redis 7]
+    ES[Elasticsearch 8.11]
+  end
+  subgraph Serving
+    MLF[MLflow 2.9.2]
+    API[.NET 8 API]
+    SF[Snowflake DW]
+  end
+  subgraph Monitoring
+    PROM[Prometheus]
+    GRAF[Grafana]
+  end
+  BS --> AIR
+  SS --> KAF
+  AIR --> SPB
+  KAF --> SPS
+  SPB --> GE
+  SPS --> GE
+  GE --> MIN
+  GE --> PG
+  PG --> SF
+  PG --> MLF
+  PG --> API
+  PROM --> GRAF
           </div>
         </div>
       </div>
@@ -225,12 +257,23 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Batch Processing Flow</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            sequenceDiagram participant BS as Batch Source<br />(MySQL/Files) participant AF as Airflow DAG participant
-            GE as Great Expectations participant MN as MinIO participant SP as Spark Batch participant PG as PostgreSQL
-            participant MG as MongoDB participant PR as Prometheus BS->>AF: Trigger Batch Job AF->>BS: Extract Data
-            AF->>GE: Validate Data Quality GE-->>AF: Validation Results AF->>MN: Upload Raw Data AF->>SP: Submit Spark
-            Job SP->>MN: Read Raw Data SP->>SP: Transform & Enrich SP->>PG: Write Processed Data SP->>MG: Write NoSQL
-            Data SP->>PR: Send Metrics AF->>PR: Job Status Metrics
+sequenceDiagram
+  participant BS as MySQL Source
+  participant AF as Airflow DAG
+  participant GE as Great Expectations
+  participant MN as MinIO
+  participant SP as Spark Batch
+  participant PG as PostgreSQL
+  BS->>AF: Trigger Batch Job
+  AF->>BS: Extract Data
+  AF->>GE: Validate Quality
+  GE-->>AF: Validation OK
+  AF->>MN: Upload Raw Data
+  AF->>SP: Submit Spark Job
+  SP->>MN: Read Raw Data
+  SP->>SP: Transform + Enrich
+  SP->>PG: Write Processed Data
+  SP->>MN: Archive to S3
           </div>
         </div>
       </div>
@@ -239,11 +282,21 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Streaming Processing Flow</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            sequenceDiagram participant KP as Kafka Producer participant KT as Kafka Topic participant SS as Spark
-            Streaming participant AD as Anomaly Detection participant PG as PostgreSQL participant MN as MinIO
-            participant GF as Grafana loop Continuous Stream KP->>KT: Publish Events KT->>SS: Consume Stream SS->>AD:
-            Process Events AD->>AD: Detect Anomalies AD->>PG: Store Results AD->>MN: Archive Data SS->>GF: Real-time
-            Metrics GF->>GF: Update Dashboard end
+sequenceDiagram
+  participant KP as Kafka Producer
+  participant KT as Kafka Topic
+  participant SS as Spark Streaming
+  participant AD as Anomaly Detection
+  participant PG as PostgreSQL
+  participant MN as MinIO
+  loop Every 2 seconds
+    KP->>KT: Publish sensor_readings
+  end
+  KT->>SS: Consume Stream
+  SS->>AD: Process Events
+  AD->>AD: Detect Anomalies
+  AD->>PG: Store Anomalies
+  AD->>MN: Archive to S3
           </div>
         </div>
       </div>
@@ -252,15 +305,45 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Docker Compose Stack (20 Services)</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            graph TB subgraph "Docker Compose - 20 Services" subgraph "Data Tier" ZK[Zookeeper<br />:2181] -->
-            KAFKA[Kafka<br />:9092] MYSQL[MySQL 8.0<br />:3306] PG[PostgreSQL 15<br />:5432] REDIS[Redis 7<br />:6379]
-            MONGO[MongoDB 6<br />:27017] MINIO[MinIO<br />:9000/:9001] INFLUX[InfluxDB 2.7<br />:8086] KP[Kafka
-            Producer] end subgraph "Orchestration" AF_WS[Airflow Webserver<br />:8080] AF_SC[Airflow Scheduler] end
-            subgraph "Processing" SM[Spark Master<br />:7077/:8081] SW[Spark Worker] end subgraph "ML &amp; Serving"
-            MLF[MLflow<br />:5001] API[.NET 8 API<br />:5000/swagger] end subgraph "Monitoring" PROM[Prometheus<br />:9090]
-            GRAF[Grafana<br />:3000] ES[Elasticsearch<br />:9200] end end KP --> KAFKA AF_WS --> MYSQL AF_WS --> PG
-            AF_SC --> PG SM --> SW SM --> MINIO SM --> KAFKA SM --> PG MLF --> PG MLF --> MINIO API --> MYSQL API --> PG
-            API --> KAFKA API --> MINIO PROM --> GRAF
+graph TB
+  subgraph Data
+    ZK[Zookeeper :2181] --> KAFKA[Kafka :9092]
+    MYSQL[MySQL :3306]
+    PG[PostgreSQL :5432]
+    REDIS[Redis :6379]
+    MONGO[MongoDB :27017]
+    MINIO[MinIO :9000]
+    INFLUX[InfluxDB :8086]
+    KP[Kafka Producer]
+  end
+  subgraph Orchestration
+    AF_WS[Airflow :8080]
+    AF_SC[Scheduler]
+  end
+  subgraph Processing
+    SM[Spark Master :8081]
+    SW[Spark Worker]
+  end
+  subgraph Serving
+    MLF[MLflow :5001]
+    API[.NET API :5000]
+  end
+  subgraph Monitoring
+    PROM[Prometheus :9090]
+    GRAF[Grafana :3000]
+    ES[Elasticsearch :9200]
+  end
+  KP --> KAFKA
+  AF_WS --> MYSQL
+  AF_WS --> PG
+  SM --> SW
+  SM --> MINIO
+  SM --> KAFKA
+  SM --> PG
+  MLF --> PG
+  API --> PG
+  API --> KAFKA
+  PROM --> GRAF
           </div>
         </div>
       </div>
@@ -496,11 +579,24 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">CI/CD Pipeline Flow</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            graph LR subgraph "Development" DEV[Developer] --> GIT[Git Push] end subgraph "CI/CD Pipeline" GIT -->
-            GHA[GitHub Actions] GHA --> TEST[Run Tests] TEST --> BUILD[Build Docker Images] BUILD --> SCAN[Security
-            Scan] SCAN --> PUSH[Push to Registry] end subgraph "Deployment" PUSH --> ARGO[Argo CD] ARGO -->
-            K8S[Kubernetes Cluster] K8S --> HELM[Helm Charts] HELM --> PODS[Deploy Pods] end subgraph "Infrastructure"
-            TERRA[Terraform] --> CLOUD[Cloud Resources] CLOUD --> K8S end PODS --> MON[Monitoring]
+graph LR
+  subgraph Development
+    DEV[Developer] --> GIT[Git Push]
+  end
+  subgraph CI/CD
+    GIT --> GHA[GitHub Actions]
+    GHA --> TEST[Run Tests]
+    TEST --> BUILD[Build Images]
+    BUILD --> PUSH[Push to GHCR]
+  end
+  subgraph Deploy
+    PUSH --> HELM[Helm Chart]
+    HELM --> K8S[Kubernetes]
+  end
+  subgraph Infra
+    TERRA[Terraform] --> CLOUD[AWS/GCP/Azure]
+    CLOUD --> K8S
+  end
           </div>
         </div>
       </div>
