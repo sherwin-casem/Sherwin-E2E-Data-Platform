@@ -27,7 +27,9 @@
       "Bash(black --check --line-length 120 airflow/ spark/ kafka/ storage/ governance/ ml/ monitoring/)",
       "Bash(black --line-length 120 airflow/ spark/ kafka/ storage/ governance/ ml/ monitoring/ bi_dashboards/ great_expectations/ snowflake/ tests/ serve_wiki.py)",
       "Bash(prettier --write \"index.html\" \"packages/*.css\" \"packages/*.js\" \"sample_dotnet_backend/appsettings*.json\")",
-      "Bash(make format:*)"
+      "Bash(make format:*)",
+      "Skill(commit-commands:commit-push-pr)",
+      "Bash(git checkout:*)"
     ]
   }
 }
