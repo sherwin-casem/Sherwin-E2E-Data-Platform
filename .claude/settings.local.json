@@ -22,7 +22,9 @@
       "Bash(grep -nE \"\\(CHANGE_ME|myrepo|yourdomain|TODO|FIXME|Replace with\\)\" /Users/davidnguyen/PycharmProjects/E2E-Data-Pipeline/terraform/*.tf /Users/davidnguyen/PycharmProjects/E2E-Data-Pipeline/kubernetes/*.yaml)",
       "Bash(grep \"aws_iam_role\\\\|aws_iam_policy\" /Users/davidnguyen/PycharmProjects/E2E-Data-Pipeline/terraform/*.tf)",
       "Bash(xargs -I {} basename {})",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(flake8:*)",
+      "Bash(black --check --line-length 120 airflow/ spark/ kafka/ storage/ governance/ ml/ monitoring/)"
     ]
   }
 }

@@ -81,7 +81,7 @@ def main():
         df = df.fillna({"amount": 0.0})
         df_transformed = df.withColumn("processed_timestamp", current_timestamp())
 
-        df_aggregated = df_transformed.groupBy("customer_id").agg(
+        df_transformed.groupBy("customer_id").agg(
             spark_sum("amount").alias("total_spent"),
             count("*").alias("order_count"),
         )

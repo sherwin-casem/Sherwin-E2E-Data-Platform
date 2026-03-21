@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Enterprise-grade end-to-end data pipeline with batch and streaming processing using Apache Spark, Kafka, Airflow, and modern data stack technologies."
+      content="Enterprise-grade end-to-end data pipeline with 20 Docker services: Apache Spark, Kafka, Airflow, Snowflake, .NET 8 API, MLflow, and full observability stack."
     />
     <meta
       name="keywords"
-      content="data pipeline, ETL, streaming, batch processing, Apache Spark, Kafka, Airflow, data engineering, MLOps, data science"
+      content="data pipeline, ETL, streaming, batch processing, Apache Spark, Kafka, Airflow, Snowflake, .NET, MLflow, data warehouse, Helm, Kubernetes, Terraform"
     />
     <meta name="author" content="Son Nguyen" />
     <meta property="og:title" content="End-to-End Data Pipeline - Enterprise Data Engineering Platform" />
@@ -68,17 +68,19 @@
       <div class="hero-content">
         <h1 class="hero-title">End-to-End Data Pipeline</h1>
         <p class="hero-subtitle">
-          Enterprise-grade data engineering platform with batch & streaming processing, comprehensive monitoring, data
-          governance, and ML integration
+          Enterprise-grade data platform with 20 Docker services, Snowflake data warehouse, .NET 8 REST API,
+          batch & streaming processing, ML experiment tracking, and multi-provider deployment (AWS, GCP, Azure, on-prem)
         </p>
 
         <div class="hero-badges">
-          <span class="badge">🔥 Production-Ready</span>
-          <span class="badge">⚡ Real-Time Processing</span>
-          <span class="badge">🔒 Enterprise Security</span>
-          <span class="badge">📊 ML/AI Integration</span>
-          <span class="badge">🌐 Cloud-Native</span>
-          <span class="badge">🚀 GitOps Ready</span>
+          <span class="badge">🔥 20 Docker Services</span>
+          <span class="badge">⚡ Real-Time Streaming</span>
+          <span class="badge">❄️ Snowflake Warehouse</span>
+          <span class="badge">📊 MLflow + Spark</span>
+          <span class="badge">🌐 Multi-Cloud Deploy</span>
+          <span class="badge">🚀 Helm + Terraform</span>
+          <span class="badge">🔧 .NET 8 API</span>
+          <span class="badge">📦 49 Tests Passing</span>
         </div>
 
         <div class="hero-actions">
@@ -92,20 +94,20 @@
     <section class="stats">
       <div class="stats-container">
         <div class="stat-item">
-          <div class="stat-number" data-count="15" data-suffix="+">0+</div>
+          <div class="stat-number" data-count="20" data-suffix="">0</div>
+          <div class="stat-label">Docker Services</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="30" data-suffix="+">0+</div>
           <div class="stat-label">Technologies Integrated</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" data-count="3" data-suffix="">0</div>
-          <div class="stat-label">Deployment Strategies</div>
+          <div class="stat-number" data-count="49" data-suffix="">0</div>
+          <div class="stat-label">Automated Tests</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" data-count="99" data-suffix=".9%">0%</div>
-          <div class="stat-label">Uptime SLA</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" data-count="100" data-suffix="%">0%</div>
-          <div class="stat-label">Open Source</div>
+          <div class="stat-number" data-count="7" data-suffix="">0</div>
+          <div class="stat-label">Deployment Targets</div>
         </div>
       </div>
     </section>
@@ -142,40 +144,50 @@
 
         <div class="feature-card">
           <div class="feature-icon">💾</div>
-          <h3 class="feature-title">Data Storage</h3>
+          <h3 class="feature-title">Multi-Tier Storage</h3>
           <p class="feature-description">
-            <strong>Multi-tier Architecture:</strong> MinIO/S3 for raw data lake, PostgreSQL for analytics, MongoDB for
-            documents, InfluxDB for time-series, Redis for caching, Elasticsearch for search
+            <strong>7 Storage Systems:</strong> MinIO (S3-compatible data lake), PostgreSQL (analytics + staging), MongoDB (documents), InfluxDB (time-series), Redis (caching), Elasticsearch (search + logs), MySQL (OLTP source)
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">❄️</div>
+          <h3 class="feature-title">Snowflake Data Warehouse</h3>
+          <p class="feature-description">
+            <strong>Star Schema:</strong> 4 dimension tables, 3 fact tables, 2 aggregation tables<br /><br />
+            <strong>ETL:</strong> Automated staging, MERGE-based loading, Snowflake Tasks for scheduled aggregation<br /><br />
+            <strong>Fallback:</strong> PostgreSQL warehouse for local development
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3 class="feature-title">.NET 8 REST API</h3>
+          <p class="feature-description">
+            <strong>16 Endpoints:</strong> Batch ingestion, streaming, warehouse ETL, ML, governance, CI/CD<br /><br />
+            <strong>Enterprise:</strong> Serilog logging, Polly retry, Swagger docs, health probes (live/ready/full)<br /><br />
+            <strong>7 Controllers, 10 Services, 6 Health Checks</strong>
           </p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📊</div>
-          <h3 class="feature-title">Monitoring & Governance</h3>
+          <h3 class="feature-title">Monitoring & ML</h3>
           <p class="feature-description">
-            <strong>Observability:</strong> Prometheus for metrics, Grafana for dashboards, ELK stack for logs<br /><br />
-            <strong>Governance:</strong> Apache Atlas/OpenMetadata for lineage, Great Expectations for quality
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🤖</div>
-          <h3 class="feature-title">ML/AI Integration</h3>
-          <p class="feature-description">
-            <strong>MLOps:</strong> MLflow for experiment tracking and model registry<br /><br />
-            <strong>Feature Store:</strong> Feast for feature management and serving<br /><br />
-            <strong>BI Tools:</strong> Integration with Tableau, Power BI, Looker
+            <strong>Observability:</strong> Prometheus (9 scrape targets), Grafana dashboards, Elasticsearch logs<br /><br />
+            <strong>MLOps:</strong> MLflow experiment tracking with PostgreSQL backend + MinIO artifacts<br /><br />
+            <strong>Quality:</strong> Great Expectations validation, Apache Atlas lineage
           </p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🚀</div>
-          <h3 class="feature-title">CI/CD & Deployment</h3>
+          <h3 class="feature-title">Multi-Provider Deployment</h3>
           <p class="feature-description">
-            <strong>GitOps:</strong> Argo CD for continuous delivery<br /><br />
-            <strong>Container Orchestration:</strong> Kubernetes with Helm charts<br /><br />
-            <strong>IaC:</strong> Terraform for cloud infrastructure<br /><br />
-            <strong>Strategies:</strong> Blue/Green, Canary, Rolling deployments
+            <strong>Local:</strong> Docker Compose (full 20-service or lite 8GB mode)<br /><br />
+            <strong>Cloud:</strong> Helm chart with AWS/GCP/Azure/on-prem value overrides<br /><br />
+            <strong>IaC:</strong> Terraform (VPC, EKS, RDS, S3) + Argo CD GitOps<br /><br />
+            <strong>CI/CD:</strong> GitHub Actions (lint, test, build, integration)
           </p>
         </div>
       </div>
@@ -235,15 +247,54 @@
       </div>
 
       <div class="architecture-section" style="margin-top: 3rem">
-        <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Docker Services Architecture</h3>
+        <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Docker Compose Stack (20 Services)</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            graph TB subgraph "Docker Compose Stack" subgraph "Data Sources" MYSQL[MySQL<br />Port: 3306] KAFKA[Kafka<br />Port:
-            9092] ZK[Zookeeper<br />Port: 2181] end subgraph "Processing" AIR[Airflow<br />Webserver:8080<br />Scheduler]
-            SPARK[Spark<br />Master/Worker] end subgraph "Storage" MINIO[MinIO<br />API: 9000<br />Console: 9001]
-            PG[PostgreSQL<br />Port: 5432] end subgraph "Monitoring" PROM[Prometheus<br />Port: 9090] GRAF[Grafana<br />Port:
-            3000] end KAFKA --> ZK AIR --> MYSQL AIR --> PG AIR --> SPARK SPARK --> MINIO SPARK --> PG SPARK --> KAFKA
-            PROM --> AIR PROM --> SPARK GRAF --> PROM end
+            graph TB
+              subgraph "Docker Compose - 20 Services"
+                subgraph "Data Tier"
+                  ZK[Zookeeper<br/>:2181] --> KAFKA[Kafka<br/>:9092]
+                  MYSQL[MySQL 8.0<br/>:3306]
+                  PG[PostgreSQL 15<br/>:5432]
+                  REDIS[Redis 7<br/>:6379]
+                  MONGO[MongoDB 6<br/>:27017]
+                  MINIO[MinIO<br/>:9000/:9001]
+                  INFLUX[InfluxDB 2.7<br/>:8086]
+                  KP[Kafka Producer]
+                end
+                subgraph "Orchestration"
+                  AF_WS[Airflow Webserver<br/>:8080]
+                  AF_SC[Airflow Scheduler]
+                end
+                subgraph "Processing"
+                  SM[Spark Master<br/>:7077/:8081]
+                  SW[Spark Worker]
+                end
+                subgraph "ML &amp; Serving"
+                  MLF[MLflow<br/>:5001]
+                  API[.NET 8 API<br/>:5000/swagger]
+                end
+                subgraph "Monitoring"
+                  PROM[Prometheus<br/>:9090]
+                  GRAF[Grafana<br/>:3000]
+                  ES[Elasticsearch<br/>:9200]
+                end
+              end
+              KP --> KAFKA
+              AF_WS --> MYSQL
+              AF_WS --> PG
+              AF_SC --> PG
+              SM --> SW
+              SM --> MINIO
+              SM --> KAFKA
+              SM --> PG
+              MLF --> PG
+              MLF --> MINIO
+              API --> MYSQL
+              API --> PG
+              API --> KAFKA
+              API --> MINIO
+              PROM --> GRAF
           </div>
         </div>
       </div>
@@ -259,76 +310,66 @@
           <div class="tech-category">
             <h3 class="tech-category-title">🔄 Data Processing</h3>
             <ul class="tech-list">
-              <li class="tech-item">⚡ Apache Spark - Batch & Stream Processing</li>
-              <li class="tech-item">🌊 Apache Flink - Low-latency Streaming</li>
-              <li class="tech-item">🔧 dbt - SQL Transformations</li>
+              <li class="tech-item">⚡ Apache Spark 3.5.3 - Batch & Stream Processing</li>
+              <li class="tech-item">📫 Apache Kafka 7.5.0 - Event Streaming</li>
+              <li class="tech-item">🦁 Zookeeper - Kafka Coordination</li>
+              <li class="tech-item">✨ Great Expectations - Data Quality Validation</li>
             </ul>
           </div>
 
           <div class="tech-category">
-            <h3 class="tech-category-title">📊 Orchestration</h3>
+            <h3 class="tech-category-title">📊 Orchestration & API</h3>
             <ul class="tech-list">
-              <li class="tech-item">🌀 Apache Airflow - Workflow Management</li>
-              <li class="tech-item">☸️ Kubernetes - Container Orchestration</li>
-              <li class="tech-item">🚀 Argo CD - GitOps Deployment</li>
+              <li class="tech-item">🌀 Apache Airflow 2.7.3 - DAG Orchestration (3 DAGs)</li>
+              <li class="tech-item">🔧 .NET 8 / C# - REST API (16 endpoints, Swagger)</li>
+              <li class="tech-item">📦 Serilog + Polly - Structured Logging & Retry</li>
+              <li class="tech-item">🎯 Dapper - Micro-ORM for DB Access</li>
             </ul>
           </div>
 
           <div class="tech-category">
-            <h3 class="tech-category-title">💾 Storage</h3>
+            <h3 class="tech-category-title">💾 Databases & Storage</h3>
             <ul class="tech-list">
-              <li class="tech-item">🐘 PostgreSQL - Analytics Database</li>
-              <li class="tech-item">🪣 MinIO/S3 - Object Storage</li>
-              <li class="tech-item">🍃 MongoDB - NoSQL Database</li>
-              <li class="tech-item">📈 InfluxDB - Time-series Data</li>
-              <li class="tech-item">🔍 Elasticsearch - Search & Analytics</li>
-              <li class="tech-item">⚡ Redis - In-memory Cache</li>
+              <li class="tech-item">❄️ Snowflake - Cloud Data Warehouse (primary)</li>
+              <li class="tech-item">🐘 PostgreSQL 15 - Analytics + Staging + Fallback DW</li>
+              <li class="tech-item">🐬 MySQL 8.0 - Source OLTP Database</li>
+              <li class="tech-item">🪣 MinIO - S3-Compatible Object Storage</li>
+              <li class="tech-item">🍃 MongoDB 6.0 - NoSQL Document Store</li>
+              <li class="tech-item">📈 InfluxDB 2.7 - Time-Series Database</li>
+              <li class="tech-item">⚡ Redis 7 - In-Memory Cache</li>
+              <li class="tech-item">🔍 Elasticsearch 8.11 - Search & Log Indexing</li>
             </ul>
           </div>
 
           <div class="tech-category">
-            <h3 class="tech-category-title">📨 Messaging</h3>
+            <h3 class="tech-category-title">🤖 ML & Monitoring</h3>
             <ul class="tech-list">
-              <li class="tech-item">📫 Apache Kafka - Event Streaming</li>
-              <li class="tech-item">🔗 Kafka Connect - Source/Sink Connectors</li>
-              <li class="tech-item">🦁 Zookeeper - Coordination Service</li>
+              <li class="tech-item">🔬 MLflow 2.9.2 - Experiment Tracking & Model Registry</li>
+              <li class="tech-item">🔥 Prometheus 2.48 - Metrics Collection (9 targets)</li>
+              <li class="tech-item">📈 Grafana 10.2 - Dashboards & Alerting</li>
+              <li class="tech-item">🗺️ Apache Atlas - Data Lineage & Governance</li>
             </ul>
           </div>
 
           <div class="tech-category">
-            <h3 class="tech-category-title">📊 Monitoring</h3>
+            <h3 class="tech-category-title">🚀 DevOps & Deployment</h3>
             <ul class="tech-list">
-              <li class="tech-item">🔥 Prometheus - Metrics Collection</li>
-              <li class="tech-item">📈 Grafana - Visualization & Dashboards</li>
-              <li class="tech-item">📋 ELK Stack - Log Management</li>
-              <li class="tech-item">🔍 Jaeger - Distributed Tracing</li>
+              <li class="tech-item">🐳 Docker Compose - Local Development (20 services)</li>
+              <li class="tech-item">☸️ Kubernetes + Helm - Production Deployment</li>
+              <li class="tech-item">🏗️ Terraform - AWS Infrastructure (VPC, EKS, RDS, S3)</li>
+              <li class="tech-item">🚀 Argo CD - GitOps Continuous Delivery</li>
+              <li class="tech-item">⚙️ GitHub Actions - CI/CD Pipeline</li>
             </ul>
           </div>
 
           <div class="tech-category">
-            <h3 class="tech-category-title">🤖 ML/AI</h3>
+            <h3 class="tech-category-title">📋 Languages & Frameworks</h3>
             <ul class="tech-list">
-              <li class="tech-item">🔬 MLflow - Experiment Tracking</li>
-              <li class="tech-item">🍱 Feast - Feature Store</li>
-              <li class="tech-item">🧠 TensorFlow/PyTorch - Model Training</li>
-            </ul>
-          </div>
-
-          <div class="tech-category">
-            <h3 class="tech-category-title">✅ Data Quality</h3>
-            <ul class="tech-list">
-              <li class="tech-item">✨ Great Expectations - Validation</li>
-              <li class="tech-item">📊 Data Profiling - Quality Metrics</li>
-              <li class="tech-item">🎯 Business Rules Engine</li>
-            </ul>
-          </div>
-
-          <div class="tech-category">
-            <h3 class="tech-category-title">🛡️ Governance</h3>
-            <ul class="tech-list">
-              <li class="tech-item">🗺️ Apache Atlas - Data Lineage</li>
-              <li class="tech-item">📚 OpenMetadata - Data Catalog</li>
-              <li class="tech-item">🔒 Policy & Compliance Management</li>
+              <li class="tech-item">🐍 Python 3.10 - Pipeline Code & DAGs</li>
+              <li class="tech-item">🔧 C# / .NET 8 - Backend REST API</li>
+              <li class="tech-item">🌐 HTML5 / CSS3 / JavaScript - Wiki Frontend</li>
+              <li class="tech-item">🗄️ SQL - Warehouse Schema & Transformations</li>
+              <li class="tech-item">📝 HCL - Terraform Infrastructure</li>
             </ul>
           </div>
         </div>
@@ -563,7 +604,7 @@
     <!-- Getting Started Section -->
     <section id="getting-started" class="section">
       <h2 class="section-title">Getting Started</h2>
-      <p class="section-subtitle">Set up the entire pipeline in minutes with Docker Compose</p>
+      <p class="section-subtitle">Deploy all 20 services in minutes with a single command</p>
 
       <div class="getting-started">
         <div class="steps-container">
@@ -586,17 +627,20 @@ cd End-to-End-Data-Pipeline</code></pre>
           <div class="step">
             <div class="step-number">2</div>
             <div class="step-content">
-              <h3>Start the Pipeline Stack</h3>
+              <h3>Configure & Start</h3>
               <p>
-                Launch all services with Docker Compose. This will start MySQL, PostgreSQL, Kafka, MinIO, Airflow,
-                Spark, Prometheus, and Grafana
+                Create environment file and launch all 20 services with Docker Compose
               </p>
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
-                <pre><code>docker-compose up --build</code></pre>
+                <pre><code>cp .env.example .env
+make build && make up
+
+# Or for 8GB machines:
+make up-lite</code></pre>
               </div>
             </div>
           </div>
@@ -610,20 +654,33 @@ cd End-to-End-Data-Pipeline</code></pre>
                 <li style="padding: 0.5rem 0">
                   🌀 <strong>Airflow UI:</strong>
                   <a href="http://localhost:8080" style="color: var(--primary-color)">http://localhost:8080</a>
+                  (admin / airflow_admin_2024)
                 </li>
                 <li style="padding: 0.5rem 0">
                   🪣 <strong>MinIO Console:</strong>
                   <a href="http://localhost:9001" style="color: var(--primary-color)">http://localhost:9001</a>
-                  (minio/minio123)
+                  (minio / minio_secret_2024)
                 </li>
                 <li style="padding: 0.5rem 0">
                   📈 <strong>Grafana:</strong>
                   <a href="http://localhost:3000" style="color: var(--primary-color)">http://localhost:3000</a>
-                  (admin/admin)
+                  (admin / admin_secret_2024)
                 </li>
                 <li style="padding: 0.5rem 0">
                   🔥 <strong>Prometheus:</strong>
                   <a href="http://localhost:9090" style="color: var(--primary-color)">http://localhost:9090</a>
+                </li>
+                <li style="padding: 0.5rem 0">
+                  🔬 <strong>MLflow:</strong>
+                  <a href="http://localhost:5001" style="color: var(--primary-color)">http://localhost:5001</a>
+                </li>
+                <li style="padding: 0.5rem 0">
+                  🔧 <strong>API Swagger:</strong>
+                  <a href="http://localhost:5000/swagger" style="color: var(--primary-color)">http://localhost:5000/swagger</a>
+                </li>
+                <li style="padding: 0.5rem 0">
+                  ⚡ <strong>Spark UI:</strong>
+                  <a href="http://localhost:8081" style="color: var(--primary-color)">http://localhost:8081</a>
                 </li>
               </ul>
             </div>
@@ -633,15 +690,20 @@ cd End-to-End-Data-Pipeline</code></pre>
             <div class="step-number">4</div>
             <div class="step-content">
               <h3>Run Your First Pipeline</h3>
-              <p>Enable and trigger the batch ingestion DAG in Airflow to see the end-to-end pipeline in action</p>
+              <p>Trigger the batch ingestion DAG to see the full pipeline in action</p>
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
-                <pre><code># In Airflow UI, enable batch_ingestion_dag
-# Or trigger via CLI:
-docker-compose exec airflow airflow dags trigger batch_ingestion_dag</code></pre>
+                <pre><code># Trigger batch pipeline: MySQL → Validation → MinIO → Spark → PostgreSQL
+make trigger-batch
+
+# Trigger warehouse ETL: Staging → Snowflake dimensions → facts → aggregations
+make trigger-warehouse
+
+# View all DAGs
+make list-dags</code></pre>
               </div>
             </div>
           </div>
@@ -649,19 +711,21 @@ docker-compose exec airflow airflow dags trigger batch_ingestion_dag</code></pre
           <div class="step">
             <div class="step-number">5</div>
             <div class="step-content">
-              <h3>Run Streaming Pipeline</h3>
-              <p>Start the Kafka producer and Spark streaming job for real-time processing</p>
+              <h3>Run Streaming & Spark Jobs</h3>
+              <p>The kafka-producer service auto-generates sensor data. Run Spark jobs for processing</p>
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
-                <pre><code># Start Kafka producer
-docker-compose exec kafka python /opt/spark_jobs/../kafka/producer.py
+                <pre><code># Kafka producer is already running (auto-started)
+make kafka-topics
 
-# Run Spark streaming job
-docker-compose exec spark spark-submit --master local[2] \
-  /opt/spark_jobs/spark_streaming_job.py</code></pre>
+# Run Spark batch ETL
+make spark-batch
+
+# Run Spark streaming (continuous)
+make spark-stream</code></pre>
               </div>
             </div>
           </div>
@@ -669,23 +733,25 @@ docker-compose exec spark spark-submit --master local[2] \
           <div class="step">
             <div class="step-number">6</div>
             <div class="step-content">
-              <h3>Deploy to Kubernetes (Optional)</h3>
-              <p>For production deployment, use Kubernetes with Argo CD for GitOps</p>
+              <h3>Deploy to Production (Optional)</h3>
+              <p>Deploy to any cloud or on-prem Kubernetes cluster via Helm chart</p>
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
-                <pre><code># Apply Kubernetes manifests
-kubectl apply -f kubernetes/
+                <pre><code># Deploy to any Kubernetes cluster
+make deploy-k8s
 
-# Setup Argo CD
-kubectl apply -f kubernetes/argo-app.yaml
+# Or deploy to specific providers:
+make deploy-aws      # AWS EKS (Terraform + Helm)
+make deploy-gcp      # GCP GKE
+make deploy-azure    # Azure AKS
+make deploy-onprem   # On-prem (k3s, kubeadm)
 
-# Deploy with Terraform (for cloud infrastructure)
-cd terraform
-terraform init
-terraform apply</code></pre>
+# Check status / teardown
+make deploy-status
+make deploy-teardown</code></pre>
               </div>
             </div>
           </div>
@@ -775,16 +841,18 @@ terraform apply</code></pre>
             <li><a href="https://spark.apache.org/">Apache Spark</a></li>
             <li><a href="https://kafka.apache.org/">Apache Kafka</a></li>
             <li><a href="https://airflow.apache.org/">Apache Airflow</a></li>
+            <li><a href="https://www.snowflake.com/">Snowflake</a></li>
+            <li><a href="https://mlflow.org/">MLflow</a></li>
+            <li><a href="https://dotnet.microsoft.com/">.NET 8</a></li>
             <li><a href="https://kubernetes.io/">Kubernetes</a></li>
-            <li><a href="https://prometheus.io/">Prometheus</a></li>
-            <li><a href="https://grafana.com/">Grafana</a></li>
+            <li><a href="https://helm.sh/">Helm</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
         <p>
-          &copy; 2025 End-to-End Data Pipeline. Licensed under
+          &copy; 2025-2026 End-to-End Data Pipeline. Licensed under
           <a href="LICENSE" style="color: var(--primary-color)">MIT License</a>.
         </p>
         <p style="margin-top: 0.5rem">

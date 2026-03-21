@@ -96,7 +96,7 @@ def main():
         df_anomalies = df_clean.filter(col("reading_value") > ANOMALY_THRESHOLD)
 
         # Write clean data to MinIO as Parquet
-        query_raw = (
+        (
             df_clean.writeStream.format("parquet")
             .option("checkpointLocation", "/opt/spark_checkpoints/raw")
             .option("path", RAW_DATA_PATH)
@@ -106,7 +106,7 @@ def main():
         )
 
         # Write anomalies to MinIO
-        query_anomalies_s3 = (
+        (
             df_anomalies.writeStream.format("parquet")
             .option("checkpointLocation", "/opt/spark_checkpoints/anomalies")
             .option("path", ANOMALY_DATA_PATH)
@@ -116,7 +116,7 @@ def main():
         )
 
         # Write anomalies to PostgreSQL
-        query_anomalies_pg = (
+        (
             df_anomalies.writeStream.foreachBatch(save_to_postgres)
             .outputMode("append")
             .option("checkpointLocation", "/opt/spark_checkpoints/anomalies-pg")
