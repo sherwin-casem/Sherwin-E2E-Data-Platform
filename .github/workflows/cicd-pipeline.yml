@@ -8,17 +8,16 @@ on:
 
 env:
   PYTHON_VERSION: "3.10"
+  REGISTRY: ghcr.io
 
 jobs:
   lint:
     name: "🔍 Lint & Format Check"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -47,11 +46,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -63,83 +60,103 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/ -v --tb=short
 
-  build-airflow:
-    name: "🐳 Build Airflow"
+  build-and-push-airflow:
+    name: "🐳 Airflow → GHCR"
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Airflow image
-        uses: docker/build-push-action@v5
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./airflow
-          push: false
-          tags: e2e-pipeline/airflow:test
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-airflow:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-airflow:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-spark:
-    name: "🐳 Build Spark"
+  build-and-push-spark:
+    name: "🐳 Spark → GHCR"
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Spark image
-        uses: docker/build-push-action@v5
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./spark
-          push: false
-          tags: e2e-pipeline/spark:test
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-spark:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-spark:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-kafka-producer:
-    name: "🐳 Build Kafka Producer"
+  build-and-push-kafka-producer:
+    name: "🐳 Kafka Producer → GHCR"
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Kafka Producer image
-        uses: docker/build-push-action@v5
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./kafka
-          push: false
-          tags: e2e-pipeline/kafka-producer:test
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-kafka-producer:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-kafka-producer:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-dotnet-api:
-    name: "🐳 Build .NET API"
+  build-and-push-dotnet-api:
+    name: "🐳 .NET API → GHCR"
     runs-on: ubuntu-latest
     needs: [lint]
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build .NET API image
-        uses: docker/build-push-action@v5
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
         with:
           context: ./sample_dotnet_backend
-          push: false
-          tags: e2e-pipeline/dotnet-api:test
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-dotnet-api:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/e2e-pipeline-dotnet-api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -148,27 +165,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Copy env file
         run: cp .env.example .env
-
       - name: Validate docker-compose.yaml
         run: docker compose config --quiet
 
   integration-test:
     name: "🔗 Integration Test"
     runs-on: ubuntu-latest
-    needs: [build-airflow, build-spark, build-kafka-producer, build-dotnet-api, docker-compose-validation]
+    needs: [build-and-push-airflow, build-and-push-spark, build-and-push-kafka-producer, build-and-push-dotnet-api, docker-compose-validation]
     env:
       POSTGRES_USER: pipeline_user
       POSTGRES_PASSWORD: pipeline_secret_2024
       POSTGRES_DB: processed_db
       MYSQL_ROOT_PASSWORD: root_secret_2024
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Copy env file
         run: cp .env.example .env
@@ -203,16 +216,16 @@ jobs:
   pipeline-complete:
     name: "✅ Pipeline Complete"
     runs-on: ubuntu-latest
-    needs: [lint, python-tests, build-airflow, build-spark, build-kafka-producer, build-dotnet-api, docker-compose-validation, integration-test]
+    needs: [lint, python-tests, build-and-push-airflow, build-and-push-spark, build-and-push-kafka-producer, build-and-push-dotnet-api, docker-compose-validation, integration-test]
     if: always()
     steps:
       - name: Check job results
         run: |
           if [ "${{ needs.lint.result }}" = "failure" ] || \
-             [ "${{ needs.build-airflow.result }}" = "failure" ] || \
-             [ "${{ needs.build-spark.result }}" = "failure" ] || \
-             [ "${{ needs.build-kafka-producer.result }}" = "failure" ] || \
-             [ "${{ needs.build-dotnet-api.result }}" = "failure" ] || \
+             [ "${{ needs.build-and-push-airflow.result }}" = "failure" ] || \
+             [ "${{ needs.build-and-push-spark.result }}" = "failure" ] || \
+             [ "${{ needs.build-and-push-kafka-producer.result }}" = "failure" ] || \
+             [ "${{ needs.build-and-push-dotnet-api.result }}" = "failure" ] || \
              [ "${{ needs.docker-compose-validation.result }}" = "failure" ]; then
             echo "Pipeline failed - check individual job logs"
             exit 1
