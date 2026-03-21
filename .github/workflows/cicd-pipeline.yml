@@ -190,7 +190,7 @@ jobs:
         run: |
           docker compose up -d zookeeper kafka mysql postgres minio redis mongodb
           echo "Waiting for services to be healthy..."
-          sleep 45
+          sleep 60
 
       - name: Check service health
         run: |

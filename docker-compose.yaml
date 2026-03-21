@@ -23,11 +23,11 @@ services:
           cpus: '0.5'
           memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
-      interval: 15s
+      test: ["CMD-SHELL", "cub zk-ready localhost:2181 5"]
+      interval: 10s
       timeout: 10s
-      retries: 5
-      start_period: 15s
+      retries: 10
+      start_period: 20s
     labels:
       com.pipeline.component: "zookeeper"
       com.pipeline.tier: "data"
