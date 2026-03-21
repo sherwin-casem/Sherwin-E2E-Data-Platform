@@ -125,8 +125,12 @@ def test_dotnet_warehouse_controller_has_snowflake():
 
 
 def test_env_has_snowflake_config():
-    """Verify .env has Snowflake configuration."""
-    with open(os.path.join(ROOT, ".env")) as f:
+    """Verify environment config has Snowflake settings."""
+    # Use .env.example since .env is gitignored and won't exist in CI
+    env_file = os.path.join(ROOT, ".env")
+    if not os.path.exists(env_file):
+        env_file = os.path.join(ROOT, ".env.example")
+    with open(env_file) as f:
         content = f.read()
 
     assert "SNOWFLAKE_ACCOUNT" in content

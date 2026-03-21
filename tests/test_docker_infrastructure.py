@@ -83,9 +83,15 @@ def test_volumes_defined():
 
 
 def test_env_files_match():
-    """Verify .env and .env.example have the same keys."""
+    """Verify .env and .env.example have the same keys (skip if .env not present, e.g. CI)."""
     env_path = os.path.join(ROOT, ".env")
     example_path = os.path.join(ROOT, ".env.example")
+
+    assert os.path.exists(example_path), ".env.example must exist"
+
+    # In CI, .env is gitignored and won't exist — that's fine, just verify .env.example is valid
+    if not os.path.exists(env_path):
+        return
 
     def parse_keys(path):
         keys = set()
