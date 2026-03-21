@@ -27,10 +27,10 @@ html {
 
 body {
   font-family:
-    "Inter",
+    'Inter',
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
     sans-serif;
   background: var(--dark-bg);
@@ -113,7 +113,7 @@ body {
 }
 
 .nav-link::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -152,7 +152,7 @@ body {
 }
 
 .hero::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -317,7 +317,7 @@ body {
 }
 
 .section-title::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -356,7 +356,7 @@ body {
 }
 
 .feature-card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -507,7 +507,7 @@ body {
 
 pre {
   margin: 0;
-  font-family: "Fira Code", "Courier New", monospace;
+  font-family: 'Fira Code', 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.6;
   overflow-x: auto;
@@ -574,7 +574,7 @@ code {
 }
 
 .deployment-features li::before {
-  content: "✓";
+  content: '✓';
   color: var(--success-color);
   font-weight: bold;
   flex-shrink: 0;

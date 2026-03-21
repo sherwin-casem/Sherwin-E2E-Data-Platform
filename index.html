@@ -68,8 +68,8 @@
       <div class="hero-content">
         <h1 class="hero-title">End-to-End Data Pipeline</h1>
         <p class="hero-subtitle">
-          Enterprise-grade data platform with 20 Docker services, Snowflake data warehouse, .NET 8 REST API,
-          batch & streaming processing, ML experiment tracking, and multi-provider deployment (AWS, GCP, Azure, on-prem)
+          Enterprise-grade data platform with 20 Docker services, Snowflake data warehouse, .NET 8 REST API, batch &
+          streaming processing, ML experiment tracking, and multi-provider deployment (AWS, GCP, Azure, on-prem)
         </p>
 
         <div class="hero-badges">
@@ -146,7 +146,9 @@
           <div class="feature-icon">💾</div>
           <h3 class="feature-title">Multi-Tier Storage</h3>
           <p class="feature-description">
-            <strong>7 Storage Systems:</strong> MinIO (S3-compatible data lake), PostgreSQL (analytics + staging), MongoDB (documents), InfluxDB (time-series), Redis (caching), Elasticsearch (search + logs), MySQL (OLTP source)
+            <strong>7 Storage Systems:</strong> MinIO (S3-compatible data lake), PostgreSQL (analytics + staging),
+            MongoDB (documents), InfluxDB (time-series), Redis (caching), Elasticsearch (search + logs), MySQL (OLTP
+            source)
           </p>
         </div>
 
@@ -250,51 +252,15 @@
         <h3 style="margin-bottom: 2rem; font-size: 1.75rem">Docker Compose Stack (20 Services)</h3>
         <div class="diagram-container">
           <div class="mermaid">
-            graph TB
-              subgraph "Docker Compose - 20 Services"
-                subgraph "Data Tier"
-                  ZK[Zookeeper<br/>:2181] --> KAFKA[Kafka<br/>:9092]
-                  MYSQL[MySQL 8.0<br/>:3306]
-                  PG[PostgreSQL 15<br/>:5432]
-                  REDIS[Redis 7<br/>:6379]
-                  MONGO[MongoDB 6<br/>:27017]
-                  MINIO[MinIO<br/>:9000/:9001]
-                  INFLUX[InfluxDB 2.7<br/>:8086]
-                  KP[Kafka Producer]
-                end
-                subgraph "Orchestration"
-                  AF_WS[Airflow Webserver<br/>:8080]
-                  AF_SC[Airflow Scheduler]
-                end
-                subgraph "Processing"
-                  SM[Spark Master<br/>:7077/:8081]
-                  SW[Spark Worker]
-                end
-                subgraph "ML &amp; Serving"
-                  MLF[MLflow<br/>:5001]
-                  API[.NET 8 API<br/>:5000/swagger]
-                end
-                subgraph "Monitoring"
-                  PROM[Prometheus<br/>:9090]
-                  GRAF[Grafana<br/>:3000]
-                  ES[Elasticsearch<br/>:9200]
-                end
-              end
-              KP --> KAFKA
-              AF_WS --> MYSQL
-              AF_WS --> PG
-              AF_SC --> PG
-              SM --> SW
-              SM --> MINIO
-              SM --> KAFKA
-              SM --> PG
-              MLF --> PG
-              MLF --> MINIO
-              API --> MYSQL
-              API --> PG
-              API --> KAFKA
-              API --> MINIO
-              PROM --> GRAF
+            graph TB subgraph "Docker Compose - 20 Services" subgraph "Data Tier" ZK[Zookeeper<br />:2181] -->
+            KAFKA[Kafka<br />:9092] MYSQL[MySQL 8.0<br />:3306] PG[PostgreSQL 15<br />:5432] REDIS[Redis 7<br />:6379]
+            MONGO[MongoDB 6<br />:27017] MINIO[MinIO<br />:9000/:9001] INFLUX[InfluxDB 2.7<br />:8086] KP[Kafka
+            Producer] end subgraph "Orchestration" AF_WS[Airflow Webserver<br />:8080] AF_SC[Airflow Scheduler] end
+            subgraph "Processing" SM[Spark Master<br />:7077/:8081] SW[Spark Worker] end subgraph "ML &amp; Serving"
+            MLF[MLflow<br />:5001] API[.NET 8 API<br />:5000/swagger] end subgraph "Monitoring" PROM[Prometheus<br />:9090]
+            GRAF[Grafana<br />:3000] ES[Elasticsearch<br />:9200] end end KP --> KAFKA AF_WS --> MYSQL AF_WS --> PG
+            AF_SC --> PG SM --> SW SM --> MINIO SM --> KAFKA SM --> PG MLF --> PG MLF --> MINIO API --> MYSQL API --> PG
+            API --> KAFKA API --> MINIO PROM --> GRAF
           </div>
         </div>
       </div>
@@ -628,9 +594,7 @@ cd End-to-End-Data-Pipeline</code></pre>
             <div class="step-number">2</div>
             <div class="step-content">
               <h3>Configure & Start</h3>
-              <p>
-                Create environment file and launch all 20 services with Docker Compose
-              </p>
+              <p>Create environment file and launch all 20 services with Docker Compose</p>
               <div class="code-block">
                 <div class="code-header">
                   <span class="code-language">bash</span>
@@ -676,7 +640,9 @@ make up-lite</code></pre>
                 </li>
                 <li style="padding: 0.5rem 0">
                   🔧 <strong>API Swagger:</strong>
-                  <a href="http://localhost:5000/swagger" style="color: var(--primary-color)">http://localhost:5000/swagger</a>
+                  <a href="http://localhost:5000/swagger" style="color: var(--primary-color)"
+                    >http://localhost:5000/swagger</a
+                  >
                 </li>
                 <li style="padding: 0.5rem 0">
                   ⚡ <strong>Spark UI:</strong>
