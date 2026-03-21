@@ -8,10 +8,10 @@ namespace DataPipelineApi.Controllers;
 [Route("api/monitor")]
 public class MonitoringController : ControllerBase
 {
-  private readonly IMonitoringService _mon;
-  public MonitoringController(IMonitoringService mon) => _mon = mon;
+    private readonly IMonitoringService _mon;
+    public MonitoringController(IMonitoringService mon) => _mon = mon;
 
-  [HttpGet("health")]
-  public async Task<IActionResult> Health(CancellationToken cancellationToken)
-    => Ok(await _mon.GetHealthAsync(cancellationToken));
+    [HttpGet("health")]
+    public async Task<IActionResult> Health(CancellationToken cancellationToken)
+      => Ok(await _mon.GetHealthAsync(cancellationToken));
 }

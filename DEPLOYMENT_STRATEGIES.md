@@ -592,5 +592,5 @@ For issues or questions:
 
 ---
 
-**Last Updated**: 2025-11-27
-**Version**: 1.0.0
+**Last Updated**: 2026-03-21
+**Version**: 2.0.0

@@ -6,5 +6,5 @@ namespace DataPipelineApi.Services;
 
 public interface IMonitoringService
 {
-  Task<IDictionary<string, string>> GetHealthAsync(CancellationToken cancellationToken);
+    Task<IDictionary<string, string>> GetHealthAsync(CancellationToken cancellationToken);
 }

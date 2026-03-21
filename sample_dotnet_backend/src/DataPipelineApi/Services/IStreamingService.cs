@@ -5,6 +5,6 @@ namespace DataPipelineApi.Services;
 
 public interface IStreamingService
 {
-  Task<string> TriggerStreamingAsync(CancellationToken cancellationToken);
-  Task<string> GetStreamingStatusAsync(string runId, CancellationToken cancellationToken);
+    Task<string> TriggerStreamingAsync(CancellationToken cancellationToken);
+    Task<string> GetStreamingStatusAsync(string runId, CancellationToken cancellationToken);
 }

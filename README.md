@@ -1,661 +1,578 @@
-# End-to-End Data Pipeline with Batch & Streaming Processing
+# End-to-End Data Pipeline
 
-This repository contains a **fully integrated, production-ready data pipeline** that supports both **batch** and **streaming** data processing using open-source technologies. It is designed to be easily configured and deployed by any business or individual with minimal modifications.
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![.NET](https://img.shields.io/badge/.NET_8-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![C#](https://img.shields.io/badge/C%23-239120?logo=csharp&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/csharp/)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Airflow](https://img.shields.io/badge/Airflow-2.7.3-017CEE?logo=apacheairflow&logoColor=white)](https://airflow.apache.org/)
+[![Spark](https://img.shields.io/badge/Spark-3.5.3-E25A1C?logo=apachespark&logoColor=white)](https://spark.apache.org/)
+[![Kafka](https://img.shields.io/badge/Kafka-7.5.0-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?logo=snowflake&logoColor=white)](https://www.snowflake.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)](https://redis.io/)
+[![MinIO](https://img.shields.io/badge/MinIO-C72E49?logo=minio&logoColor=white)](https://min.io/)
+[![InfluxDB](https://img.shields.io/badge/InfluxDB-2.7-22ADF6?logo=influxdb&logoColor=white)](https://www.influxdata.com/)
+[![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.11-005571?logo=elasticsearch&logoColor=white)](https://www.elastic.co/)
+[![MLflow](https://img.shields.io/badge/MLflow-2.9.2-0194E2?logo=mlflow&logoColor=white)](https://mlflow.org/)
+[![Prometheus](https://img.shields.io/badge/Prometheus-2.48-E6522C?logo=prometheus&logoColor=white)](https://prometheus.io/)
+[![Grafana](https://img.shields.io/badge/Grafana-10.2-F46800?logo=grafana&logoColor=white)](https://grafana.com/)
+[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=black)](https://swagger.io/)
+[![Serilog](https://img.shields.io/badge/Serilog-2B2D42?logo=dotnet&logoColor=white)](https://serilog.net/)
+[![Dapper](https://img.shields.io/badge/Dapper_ORM-512BD4?logo=nuget&logoColor=white)](https://github.com/DapperLib/Dapper)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![Terraform](https://img.shields.io/badge/Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![Helm](https://img.shields.io/badge/Helm-0F1689?logo=helm&logoColor=white)](https://helm.sh/)
+[![Argo CD](https://img.shields.io/badge/Argo_CD-EF7B4D?logo=argo&logoColor=white)](https://argoproj.github.io/cd/)
 
-The pipeline incorporates:
-
-- **Data Ingestion:**  
-  - **Batch Sources:** SQL databases (MySQL, PostgreSQL), Data Lakes (MinIO as an S3-compatible store), files (CSV, JSON, XML)  
-  - **Streaming Sources:** Kafka for event logs, IoT sensor data, and social media streams
-
-- **Data Processing & Transformation:**  
-  - **Batch Processing:** Apache Spark for large-scale ETL jobs, integrated with Great Expectations for data quality checks  
-  - **Streaming Processing:** Spark Structured Streaming for real-time data processing and anomaly detection
-
-- **Data Storage:**  
-  - **Raw Data:** Stored in MinIO (S3-compatible storage)  
-  - **Processed Data:** Loaded into PostgreSQL for analytics and reporting
-
-- **Data Quality, Monitoring & Governance:**  
-  - **Data Quality:** Great Expectations validates incoming data  
-  - **Data Governance:** Apache Atlas / OpenMetadata integration (lineage registration)  
-  - **Monitoring & Logging:** Prometheus and Grafana for system monitoring and alerting
-
-- **Data Serving & AI/ML Integration:**  
-  - **ML Pipelines:** MLflow for model tracking and feature store integration  
-  - **BI & Dashboarding:** Grafana dashboards provide real-time insights
-
-- **CI/CD & Deployment:**  
-  - **CI/CD Pipelines:** GitHub Actions or Jenkins for continuous integration and deployment  
-  - **Container Orchestration:** Kubernetes with Argo CD for GitOps deployment
-
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/) [![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/) [![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)](https://www.gnu.org/software/bash/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/) [![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/) [![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)](https://airflow.apache.org/) [![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=for-the-badge&logo=apachespark&logoColor=white)](https://spark.apache.org/) [![Apache Flink](https://img.shields.io/badge/Apache%20Flink-E6526F?style=for-the-badge&logo=apacheflink&logoColor=white)](https://flink.apache.org/) [![Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)](https://kafka.apache.org/) [![Apache Hadoop](https://img.shields.io/badge/Apache%20Hadoop-EC1D24?style=for-the-badge&logo=apachehadoop&logoColor=white)](https://hadoop.apache.org/)
- [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/) [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/) [![InfluxDB](https://img.shields.io/badge/InfluxDB-22ADF6?style=for-the-badge&logo=influxdb&logoColor=white)](https://www.influxdata.com/) [![MinIO](https://img.shields.io/badge/MinIO-CF2A27?style=for-the-badge&logo=minio&logoColor=white)](https://min.io/) [![AWS S3](https://img.shields.io/badge/AWS%20S3-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com/s3/) [![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/) [![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)](https://grafana.com/) [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)](https://www.elastic.co/) [![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)](https://mlflow.org/) [![Feast](https://img.shields.io/badge/Feast-FF6F00?style=for-the-badge&logo=feast&logoColor=white)](https://feast.dev/) [![Great Expectations](https://img.shields.io/badge/Great%20Expectations-1A1A1A?style=for-the-badge&logo=great-expectations&logoColor=white)](https://greatexpectations.io/) [![Apache Atlas](https://img.shields.io/badge/Apache%20Atlas-1E1E1E?style=for-the-badge&logo=apache&logoColor=white)](https://atlas.apache.org/) [![Tableau](https://img.shields.io/badge/Tableau-E97627?style=for-the-badge&logo=tableau&logoColor=white)](https://www.tableau.com/) [![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=white)](https://powerbi.microsoft.com/) [![Looker](https://img.shields.io/badge/Looker-4285F4?style=for-the-badge&logo=looker&logoColor=white)](https://looker.com/) [![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/) [![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io/)
-
-Read this README and follow the step-by-step guide to set up the pipeline on your local machine or cloud environment. Customize the pipeline components, configurations, and example applications to suit your data processing needs.
+A **production-ready, fully containerized data platform** with batch ingestion, real-time streaming, a star-schema data warehouse, ML experiment tracking, a .NET 8 REST API, and full observability -- all orchestrated through **20 Docker services** managed by a single `docker compose` stack.
 
 ## Table of Contents
 
-1. [Architecture Overview](#architecture-overview)
-2. [Directory Structure](#directory-structure)
-3. [Components & Technologies](#components--technologies)
-4. [Setup Instructions](#setup-instructions)
-5. [Configuration & Customization](#configuration--customization)
-6. [Example Applications](#example-applications)
-7. [Troubleshooting & Further Considerations](#troubleshooting--further-considerations)
-8. [Contributing](#contributing)
-9. [License](#license)
-10. [Final Notes](#final-notes)
+- [Architecture](#architecture)
+- [Pipeline Flows](#pipeline-flows)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Service URLs](#service-urls)
+- [API Documentation (.NET 8 Backend)](#api-documentation-net-8-backend)
+- [Data Warehouse Schema](#data-warehouse-schema)
+- [Airflow DAGs](#airflow-dags)
+- [Testing](#testing)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Architecture Overview
-
-The architecture of the end-to-end data pipeline is designed to handle both batch and streaming data processing. Below is a high-level overview of the components and their interactions:
-
-### High-Level Architecture
+## Architecture
 
 ```mermaid
 graph TB
-    subgraph "Data Sources"
-        BS[Batch Sources<br/>MySQL, Files, CSV/JSON/XML]
-        SS[Streaming Sources<br/>Kafka Events, IoT, Social Media]
+    subgraph Sources
+        MYSQL[(MySQL 8.0<br/>Source DB)]
+        KP[Kafka Producer<br/>Sensor Data]
     end
 
-    subgraph "Ingestion & Orchestration"
-        AIR[Apache Airflow<br/>DAG Orchestration]
-        KAF[Apache Kafka<br/>Event Streaming]
+    subgraph Orchestration
+        AF[Airflow 2.7.3<br/>3 DAGs]
     end
 
-    subgraph "Processing Layer"
-        SPB[Spark Batch<br/>Large-scale ETL]
-        SPS[Spark Streaming<br/>Real-time Processing]
-        GE[Great Expectations<br/>Data Quality]
+    subgraph Streaming
+        ZK[Zookeeper] --> KAFKA[Kafka 7.5.0]
+        KP --> KAFKA
     end
 
-    subgraph "Storage Layer"
-        MIN[MinIO<br/>S3-Compatible Storage]
-        PG[PostgreSQL<br/>Analytics Database]
-        S3[AWS S3<br/>Cloud Storage]
-        MDB[MongoDB<br/>NoSQL Store]
-        IDB[InfluxDB<br/>Time-series DB]
+    subgraph Processing
+        GE[Great Expectations<br/>Validation]
+        SM[Spark Master] --> SW[Spark Worker]
     end
 
-    subgraph "Monitoring & Governance"
-        PROM[Prometheus<br/>Metrics Collection]
-        GRAF[Grafana<br/>Dashboards]
-        ATL[Apache Atlas<br/>Data Lineage]
+    subgraph Storage
+        MINIO[MinIO<br/>S3-Compatible]
+        PG[(PostgreSQL 15<br/>Warehouse + Processed)]
+        MONGO[(MongoDB 6.0)]
+        REDIS[(Redis 7)]
+        INFLUX[(InfluxDB 2.7)]
     end
 
-    subgraph "ML & Serving"
-        MLF[MLflow<br/>Model Tracking]
-        FST[Feast<br/>Feature Store]
-        BI[BI Tools<br/>Tableau/PowerBI/Looker]
+    subgraph Serving
+        API[.NET 8 API<br/>Swagger]
+        MLFLOW[MLflow v2.9.2]
     end
 
-    BS --> AIR
-    SS --> KAF
-    AIR --> SPB
-    KAF --> SPS
-    SPB --> GE
-    SPS --> GE
-    GE --> MIN
-    GE --> PG
-    MIN --> S3
-    PG --> MDB
-    PG --> IDB
-    SPB --> PROM
-    SPS --> PROM
-    PROM --> GRAF
-    SPB --> ATL
-    SPS --> ATL
-    PG --> MLF
-    PG --> FST
-    PG --> BI
-    MIN --> MLF
+    subgraph Observability
+        PROM[Prometheus] --> GRAF[Grafana 10.2]
+        ES[(Elasticsearch 8.11)]
+    end
+
+    MYSQL --> AF
+    AF --> GE --> MINIO
+    AF --> SM
+    SM --> PG
+    KAFKA --> SM
+    PG --> API
+    PG --> MLFLOW
+    PROM --> AF
+    PROM --> SM
 ```
 
-### Flow Diagram
+## Pipeline Flows
 
-<p align="center">
-  <img src="assets/architecture_diagram.png" alt="Architecture Diagram" width="100%"/>
-</p>
+### Batch Pipeline (Daily)
 
-Basically, data will be streamed with Kafka, processed with Spark, and stored in a data warehouse using PostgreSQL. The pipeline also integrates MinIO as an object storage solution and uses Airflow to orchestrate the end-to-end data flow. Great Expectations enforces data quality checks, while Prometheus and Grafana provide monitoring and alerting capabilities. MLflow and Feast are used for machine learning model tracking and feature store integration.
-
-> [!CAUTION]
-> Note: The diagram(s) may not reflect ALL components in the repository, but it provides a good overview of the main components and their interactions. For instance, I added BI tools like Tableau, Power BI, and Looker to the repo for data visualization and reporting.
-
-### Batch Pipeline Flow
-
-```mermaid
-sequenceDiagram
-    participant BS as Batch Source<br/>(MySQL/Files)
-    participant AF as Airflow DAG
-    participant GE as Great Expectations
-    participant MN as MinIO
-    participant SP as Spark Batch
-    participant PG as PostgreSQL
-    participant MG as MongoDB
-    participant PR as Prometheus
-
-    BS->>AF: Trigger Batch Job
-    AF->>BS: Extract Data
-    AF->>GE: Validate Data Quality
-    GE-->>AF: Validation Results
-    AF->>MN: Upload Raw Data
-    AF->>SP: Submit Spark Job
-    SP->>MN: Read Raw Data
-    SP->>SP: Transform & Enrich
-    SP->>PG: Write Processed Data
-    SP->>MG: Write NoSQL Data
-    SP->>PR: Send Metrics
-    AF->>PR: Job Status Metrics
+```
+MySQL --> Airflow DAG --> Great Expectations --> MinIO (raw) --> Spark Transform --> PostgreSQL (processed)
 ```
 
-### Streaming Pipeline Flow
+### Streaming Pipeline (Continuous)
 
-```mermaid
-sequenceDiagram
-    participant KP as Kafka Producer
-    participant KT as Kafka Topic
-    participant SS as Spark Streaming
-    participant AD as Anomaly Detection
-    participant PG as PostgreSQL
-    participant MN as MinIO
-    participant GF as Grafana
-
-    KP->>KT: Publish Events
-    KT->>SS: Consume Stream
-    SS->>AD: Process Events
-    AD->>AD: Detect Anomalies
-    AD->>PG: Store Results
-    AD->>MN: Archive Data
-    SS->>GF: Real-time Metrics
-    GF->>GF: Update Dashboard
+```
+Kafka Producer --> Kafka Topic (sensor_readings) --> Spark Streaming --> Anomaly Detection --> PostgreSQL + MinIO
 ```
 
-### Data Quality & Governance Flow
+### Warehouse ETL (Hourly)
+
+```
+Staging Tables --> Dimension Load (customers, products, dates, devices) --> Fact Load (orders, sensors, pipeline runs) --> Aggregations (daily orders, hourly sensors)
+```
+
+## Technology Stack
+
+| Layer | Technology | Version | Purpose |
+|-------|-----------|---------|---------|
+| **Orchestration** | Apache Airflow | 2.7.3 | DAG scheduling and pipeline orchestration |
+| **Batch Processing** | Apache Spark | 3.5.3 | Large-scale ETL and transformations |
+| **Stream Processing** | Apache Kafka | 7.5.0 (Confluent) | Event streaming and real-time ingestion |
+| **Data Quality** | Great Expectations | latest | Schema validation and data quality checks |
+| **Source Database** | MySQL | 8.0 | Transactional source system |
+| **Data Warehouse** | Snowflake / PostgreSQL | - / 15 | Star-schema warehouse (Snowflake primary, PG fallback) |
+| **Object Storage** | MinIO | latest | S3-compatible data lake |
+| **Cache** | Redis | 7-alpine | Caching and session storage |
+| **Document Store** | MongoDB | 6.0.13 | NoSQL storage for semi-structured data |
+| **Time Series** | InfluxDB | 2.7 | IoT and time-series metrics |
+| **Search** | Elasticsearch | 8.11.3 | Full-text search and log indexing |
+| **REST API** | .NET 8 | 8.0 | Backend API with Swagger documentation |
+| **ML Tracking** | MLflow | 2.9.2 | Experiment tracking and model registry |
+| **Metrics** | Prometheus | 2.48.1 | Metrics collection and alerting |
+| **Dashboards** | Grafana | 10.2.3 | Visualization and monitoring dashboards |
+| **Governance** | Apache Atlas (stub) | -- | Data lineage registration |
+| **IaC** | Terraform + Kubernetes | -- | Cloud deployment manifests |
+
+## Prerequisites
+
+- **Docker** and **Docker Compose** v2+
+- **Python 3.10+** (for running tests locally)
+- **Make** (GNU Make)
+- **16 GB RAM** recommended for full stack (or **8 GB** with `make up-lite`)
+- Ports available: `3000, 3306, 5000, 5001, 5432, 6379, 7077, 8080, 8081, 8086, 9000, 9001, 9090, 9092, 9200, 27017`
+
+## Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/hoangsonww/End-to-End-Data-Pipeline.git
+cd End-to-End-Data-Pipeline
+
+# 2. Create environment file
+cp .env.example .env
+
+# 3. Build and start all 20 services
+make build
+make up
+
+# 4. Verify services are running
+make health
+make urls
+
+# 5. Trigger the batch pipeline
+make trigger-batch
+
+# 6. Trigger the warehouse ETL
+make trigger-warehouse
+
+# 7. Run Spark jobs directly
+make spark-batch
+make spark-stream
+```
+
+### Key Make Commands
+
+| Command | Description |
+|---------|-------------|
+| `make up` | Start all 20 services (~18GB RAM) |
+| `make up-lite` | Start core services only (~8GB RAM) |
+| `make down` | Stop all services |
+| `make build` | Build all Docker images |
+| `make rebuild` | Full rebuild from scratch (no cache) |
+| `make test` | Run 35 Python tests |
+| `make lint` | Lint Python code with flake8 |
+| `make health` | Show health status of all containers |
+| `make status` | Show running container status |
+| `make urls` | Print all service URLs |
+| `make spark-batch` | Submit Spark batch ETL job |
+| `make spark-stream` | Submit Spark streaming job |
+| `make trigger-batch` | Trigger `batch_ingestion_dag` in Airflow |
+| `make trigger-warehouse` | Trigger `warehouse_transform_dag` in Airflow |
+| `make list-dags` | List all Airflow DAGs |
+| `make kafka-topics` | List Kafka topics |
+| `make logs-kafka` | Tail Kafka logs |
+| `make clean` | Stop services and remove all volumes |
+| `make format` | Format all code (Python, C#, HTML/CSS/JS) |
+| `make format-check` | Check formatting without modifying |
+| `make deploy-local` | Deploy via Docker Compose (full stack) |
+| `make deploy-lite` | Deploy via Docker Compose (lite, 8GB) |
+| `make deploy-k8s` | Deploy to any Kubernetes cluster via Helm |
+| `make deploy-aws` | Deploy to AWS EKS (Terraform + Helm) |
+| `make deploy-gcp` | Deploy to GCP GKE via Helm |
+| `make deploy-azure` | Deploy to Azure AKS via Helm |
+| `make deploy-onprem` | Deploy to on-prem K8s (k3s, kubeadm) |
+| `make deploy-teardown` | Remove deployment from any target |
+
+## Deployment
+
+The pipeline can be deployed to **any environment** using a single command:
 
 ```mermaid
 graph LR
-    subgraph "Data Quality Pipeline"
-        DI[Data Ingestion] --> GE[Great Expectations]
-        GE --> VR{Validation<br/>Result}
-        VR -->|Pass| DP[Data Processing]
-        VR -->|Fail| AL[Alert & Log]
-        AL --> DR[Data Rejection]
-        DP --> DQ[Quality Metrics]
+    subgraph "Local / On-Prem"
+        DC[Docker Compose<br/>make deploy-local]
+        DL[Docker Compose Lite<br/>make deploy-lite]
+        OP[On-Prem K8s<br/>make deploy-onprem]
+    end
+    subgraph "Cloud Providers"
+        AWS[AWS EKS<br/>make deploy-aws]
+        GCP[GCP GKE<br/>make deploy-gcp]
+        AZ[Azure AKS<br/>make deploy-azure]
+    end
+    subgraph "Any Kubernetes"
+        K8S[Helm Chart<br/>make deploy-k8s]
     end
 
-    subgraph "Data Governance"
-        DP --> ATL[Apache Atlas]
-        ATL --> LIN[Lineage Tracking]
-        ATL --> CAT[Data Catalog]
-        ATL --> POL[Policies & Compliance]
-    end
-
-    DQ --> PROM[Prometheus]
-    PROM --> GRAF[Grafana Dashboard]
+    DC --> |20 services| Pipeline
+    DL --> |16 services| Pipeline
+    OP --> |Helm| Pipeline
+    AWS --> |Terraform + Helm| Pipeline
+    GCP --> |Helm| Pipeline
+    AZ --> |Helm| Pipeline
+    K8S --> |Helm| Pipeline
 ```
 
-### CI/CD & Deployment Pipeline
+| Target | Command | Requirements | Resources |
+|--------|---------|-------------|-----------|
+| **Local (full)** | `make deploy-local` | Docker | 16GB RAM, 14 CPU |
+| **Local (lite)** | `make deploy-lite` | Docker | 8GB RAM, 7 CPU |
+| **Any K8s** | `make deploy-k8s` | kubectl, Helm | K8s cluster |
+| **AWS** | `make deploy-aws` | Terraform, AWS CLI | EKS cluster |
+| **GCP** | `make deploy-gcp` | gcloud, Helm | GKE cluster |
+| **Azure** | `make deploy-azure` | az CLI, Helm | AKS cluster |
+| **On-prem** | `make deploy-onprem` | kubectl, Helm | k3s / kubeadm / Rancher |
+
+### Helm Chart
+
+The `helm/e2e-pipeline/` chart deploys the full pipeline to any Kubernetes cluster:
+
+```bash
+# Add repos and install
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+# Deploy with provider-specific values
+helm install e2e-pipeline ./helm/e2e-pipeline \
+  -f helm/e2e-pipeline/values-aws.yaml \     # or values-gcp.yaml, values-azure.yaml, values-onprem.yaml
+  --set postgresql.auth.password=YOUR_PASSWORD \
+  --set minio.auth.rootPassword=YOUR_PASSWORD \
+  --namespace pipeline --create-namespace
+```
+
+### Terraform (AWS)
+
+Full AWS infrastructure (VPC, EKS, RDS, S3) in `terraform/`:
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your settings
+terraform init && terraform plan && terraform apply
+```
+
+Includes: VPC with public/private subnets, NAT Gateway, EKS with autoscaling nodes, RDS PostgreSQL (encrypted, multi-AZ), S3 data lake (versioned, encrypted, lifecycle policies), 3 security groups.
+
+## Service URLs
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| **Airflow UI** | [http://localhost:8080](http://localhost:8080) | `admin` / `airflow_admin_2024` |
+| **Grafana** | [http://localhost:3000](http://localhost:3000) | `admin` / `admin_secret_2024` |
+| **MinIO Console** | [http://localhost:9001](http://localhost:9001) | `minio` / `minio_secret_2024` |
+| **MLflow UI** | [http://localhost:5001](http://localhost:5001) | -- |
+| **Spark Master UI** | [http://localhost:8081](http://localhost:8081) | -- |
+| **Swagger (.NET API)** | [http://localhost:5000/swagger](http://localhost:5000/swagger) | -- |
+| **Prometheus** | [http://localhost:9090](http://localhost:9090) | -- |
+| **Elasticsearch** | [http://localhost:9200](http://localhost:9200) | -- |
+| **Kafka** | `localhost:9092` | -- |
+| **PostgreSQL** | `localhost:5432` | `pipeline_user` / `pipeline_secret_2024` |
+| **MySQL** | `localhost:3306` | `pipeline_user` / `pipeline_secret_2024` |
+| **MongoDB** | `localhost:27017` | -- |
+| **Redis** | `localhost:6379` | -- |
+| **InfluxDB** | [http://localhost:8086](http://localhost:8086) | -- |
+
+## API Documentation (.NET 8 Backend)
+
+The .NET 8 API runs on port **5000** with interactive Swagger documentation at [`/swagger`](http://localhost:5000/swagger). Built with ASP.NET Core, Serilog structured logging, Polly retry policies, and Dapper micro-ORM.
 
 ```mermaid
 graph LR
-    subgraph "Development"
-        DEV[Developer] --> GIT[Git Push]
-    end
-
-    subgraph "CI/CD Pipeline"
-        GIT --> GHA[GitHub Actions]
-        GHA --> TEST[Run Tests]
-        TEST --> BUILD[Build Docker Images]
-        BUILD --> SCAN[Security Scan]
-        SCAN --> PUSH[Push to Registry]
-    end
-
-    subgraph "Deployment"
-        PUSH --> ARGO[Argo CD]
-        ARGO --> K8S[Kubernetes Cluster]
-        K8S --> HELM[Helm Charts]
-        HELM --> PODS[Deploy Pods]
-    end
-
-    subgraph "Infrastructure"
-        TERRA[Terraform] --> CLOUD[Cloud Resources]
-        CLOUD --> K8S
-    end
-
-    PODS --> MON[Monitoring]
+    C[Client] --> MW[Middleware<br/>X-Request-ID + Serilog]
+    MW --> BC[BatchController]
+    MW --> SC[StreamingController]
+    MW --> WC[WarehouseController]
+    MW --> MC[MLController]
+    MW --> GC[GovernanceController]
+    MW --> CC[CIController]
+    MW --> HC[MonitoringController]
+    BC --> MySQL & MinIO & Airflow
+    SC --> Kafka & Airflow
+    WC --> PostgreSQL & Snowflake
+    MC --> MLflow
+    GC --> Atlas
+    CC --> GitHub
 ```
 
-### Text-Based Pipeline Diagram
+### Endpoints (16 routes)
 
-```mermaid
-graph TB
-    subgraph Batch["Batch Processing"]
-        BS[Batch Source<br/>MySQL, Files, User Interaction]
-        AD[Airflow Batch DAG<br/>- Extracts data from MySQL<br/>- Validates with Great Expectations<br/>- Uploads raw data to MinIO]
-        SB[Spark Batch Job<br/>- Reads raw CSV from MinIO<br/>- Transforms, cleans, enriches<br/>- Writes to PostgreSQL & MinIO]
-        PDS[Processed Data Store<br/>PostgreSQL, MongoDB, AWS S3]
-        CI[Cache & Indexing<br/>Elasticsearch, Redis]
-        
-        BS -->|Extract/Validate| AD
-        AD -->|spark-submit| SB
-        SB -->|Load/Analyze| PDS
-        PDS -->|Query/Analyze| CI
-    end
-    
-    subgraph Stream["Streaming Processing"]
-        SS[Streaming Source<br/>Kafka]
-        SSJ[Spark Streaming Job<br/>- Consumes Kafka messages<br/>- Filters and detects anomalies<br/>- Persists to PostgreSQL & MinIO]
-        
-        SS --> SSJ
-    end
-    
-    subgraph Monitor["Monitoring & Governance"]
-        MG[Monitoring & Data Governance<br/>- Prometheus & Grafana<br/>- Apache Atlas / OpenMetadata]
-    end
-    
-    subgraph ML["AI/ML Serving"]
-        MLS[AI/ML Serving<br/>- Feature Store Feast<br/>- MLflow Model Tracking<br/>- Model training & serving<br/>- BI Dashboards]
-    end
-    
-    subgraph CICD["CI/CD & Infrastructure"]
-        CIP[CI/CD Pipelines<br/>GitHub Actions / Jenkins<br/>Terraform for Cloud Deploy]
-        K8S[Kubernetes Cluster<br/>Argo CD for GitOps<br/>Helm Charts for Deployment]
-    end
-    
-    SSJ --> PDS
-    MG -.monitors.-> Batch
-    MG -.monitors.-> Stream
-    ML -.uses.-> PDS
-    CIP --> K8S
-    K8S -.orchestrates.-> Batch
-    K8S -.orchestrates.-> Stream
+| Method | Endpoint | Controller | Description |
+|--------|----------|------------|-------------|
+| `POST` | `/api/batch/ingest` | BatchController | Extract MySQL → validate → upload MinIO → trigger Airflow |
+| `POST` | `/api/stream/produce` | StreamingController | Produce message to Kafka topic |
+| `POST` | `/api/stream/run` | StreamingController | Trigger streaming monitoring DAG |
+| `POST` | `/api/warehouse/transform` | WarehouseController | Trigger Snowflake warehouse ETL |
+| `GET` | `/api/warehouse/health` | WarehouseController | Check warehouse + Snowflake connectivity |
+| `GET` | `/api/warehouse/snowflake/status` | WarehouseController | Snowflake config status + schema info |
+| `GET` | `/api/warehouse/aggregations/daily-orders` | WarehouseController | Daily order aggregations |
+| `GET` | `/api/warehouse/pipeline-runs` | WarehouseController | Pipeline run history |
+| `POST` | `/api/governance/lineage` | GovernanceController | Register data lineage in Atlas |
+| `POST` | `/api/ml/run` | MLController | Create MLflow experiment run |
+| `POST` | `/api/ci/trigger` | CIController | Dispatch GitHub Actions workflow |
+| `GET` | `/api/monitor/health` | MonitoringController | Aggregated health of all services |
+| `GET` | `/health` | Built-in | Full health check (6 dependency checks) |
+| `GET` | `/health/ready` | Built-in | Readiness probe (critical deps only) |
+| `GET` | `/health/live` | Built-in | Liveness probe (always 200) |
+| `GET` | `/swagger` | Swashbuckle | Interactive API documentation |
+
+### Backend Architecture
+
+| Layer | Components | Technology |
+|-------|-----------|------------|
+| **Controllers** | 7 controllers (Batch, Streaming, Warehouse, ML, Governance, CI, Monitoring) | ASP.NET Core |
+| **Services** | 10 services with interfaces (Db, Kafka, Minio, Batch, Streaming, Atlas, MLflow, GE, CI, Monitoring) | Dapper, Confluent.Kafka, AWS SDK |
+| **Health Checks** | 6 checks (MySQL, PostgreSQL, Kafka, MinIO, Airflow, MLflow) | ASP.NET Health Checks |
+| **Options** | 8 validated config classes with `ValidateOnStart()` | Options Pattern |
+| **Resilience** | Polly retry (3x exponential backoff), request timeouts | Polly |
+| **Logging** | Serilog with console + file sinks, request ID correlation | Serilog |
+
+## Data Warehouse Schema
+
+The warehouse uses a **star schema** in **Snowflake** (with PostgreSQL fallback for local development). When `SNOWFLAKE_ACCOUNT` is set, data flows to Snowflake via staging tables. Otherwise, PostgreSQL serves as the warehouse.
+
+### Dimensions
+
+| Table | Description |
+|-------|-------------|
+| `dim_customers` | Customer master data |
+| `dim_products` | Product catalog |
+| `dim_date` | Date dimension (calendar attributes) |
+| `dim_devices` | IoT device registry |
+
+### Facts
+
+| Table | Description |
+|-------|-------------|
+| `fact_orders` | Transactional order data linked to customer, product, date |
+| `fact_sensor_readings` | IoT sensor measurements linked to device, date |
+| `fact_pipeline_runs` | Pipeline execution metadata and status tracking |
+
+### Aggregations
+
+| Table | Description |
+|-------|-------------|
+| `agg_daily_orders` | Daily order totals and revenue summaries |
+| `agg_hourly_sensors` | Hourly sensor reading averages and counts |
+
+## Airflow DAGs
+
+| DAG | Schedule | Description |
+|-----|----------|-------------|
+| `batch_ingestion_dag` | Daily | Extract from MySQL, validate with Great Expectations, upload raw data to MinIO, Spark transform, load to PostgreSQL |
+| `streaming_monitoring_dag` | Every 15 min | Monitor Kafka broker health, check consumer lag, alert on anomalies |
+| `warehouse_transform_dag` | Hourly | Stage data in Snowflake, load dimensions/facts, refresh aggregations (PG fallback) |
+
+## Testing
+
+The test suite contains **35 tests** across 5 files.
+
+```bash
+make test
 ```
 
-### Full Flow Diagram with Backend & Frontend Integration (Optional)
+| Test File | Scope |
+|-----------|-------|
+| `tests/test_pipeline_config.py` | Environment variables, connection strings, service configuration |
+| `tests/test_kafka_producer.py` | Kafka producer logic, message serialization, topic configuration |
+| `tests/test_data_validation.py` | Great Expectations suite, schema validation, data quality rules |
+| `tests/test_warehouse_sql.py` | Warehouse DDL, star-schema integrity, aggregation queries |
+| `tests/test_snowflake.py` | Snowflake SQL schema, connector module, DAG/BI/API integration |
+| `tests/test_docker_infrastructure.py` | Docker Compose structure, service definitions, port mappings |
 
-A more detailed flow diagram that includes backend and frontend integration is available in the `assets/` directory. This diagram illustrates how the data pipeline components interact with each other and with external systems, including data sources, storage, processing, visualization, and monitoring. 
+## CI/CD Pipeline
 
-Although the frontend & backend integration is not included in this repository (since it's supposed to only contain the pipeline), you can easily integrate it with your existing frontend application or create a new one using popular frameworks like React, Angular, or Vue.js.
+The GitHub Actions workflow (`.github/workflows/cicd-pipeline.yml`) runs on every push and PR to `master`/`main`.
 
-<p align="center">
-  <img src="assets/full_flow_diagram.png" alt="Full Flow Diagram" width="100%"/>
-</p>
+| Stage | Job | Details |
+|-------|-----|---------|
+| **Lint** | `lint` | flake8, black (formatting), isort (imports) |
+| **Test** | `python-tests` | 35 unit tests with pytest |
+| **Build** | `docker-build` | Build matrix: `airflow`, `spark`, `kafka-producer`, `dotnet-api` |
+| **Validate** | `docker-compose-validation` | Validate `docker-compose.yaml` syntax |
+| **Integration** | `integration-test` | Start core services, verify health (Kafka, PostgreSQL, MySQL, Redis) |
+| **Gate** | `pipeline-complete` | Aggregates all job results for branch protection |
 
-### Docker Services Architecture
-
-```mermaid
-graph TB
-    subgraph "Docker Compose Stack"
-        subgraph "Data Sources"
-            MYSQL[MySQL<br/>Port: 3306]
-            KAFKA[Kafka<br/>Port: 9092]
-            ZK[Zookeeper<br/>Port: 2181]
-        end
-
-        subgraph "Processing"
-            AIR[Airflow<br/>Webserver:8080<br/>Scheduler]
-            SPARK[Spark<br/>Master/Worker]
-        end
-
-        subgraph "Storage"
-            MINIO[MinIO<br/>API: 9000<br/>Console: 9001]
-            PG[PostgreSQL<br/>Port: 5432]
-        end
-
-        subgraph "Monitoring"
-            PROM[Prometheus<br/>Port: 9090]
-            GRAF[Grafana<br/>Port: 3000]
-        end
-
-        KAFKA --> ZK
-        AIR --> MYSQL
-        AIR --> PG
-        AIR --> SPARK
-        SPARK --> MINIO
-        SPARK --> PG
-        SPARK --> KAFKA
-        PROM --> AIR
-        PROM --> SPARK
-        GRAF --> PROM
-    end
-```
-
-### ML Pipeline Flow
-
-```mermaid
-flowchart LR
-    subgraph "Feature Engineering"
-        RAW[Raw Data] --> FE[Feature<br/>Extraction]
-        FE --> FS[Feature Store<br/>Feast]
-    end
-
-    subgraph "Model Training"
-        FS --> TRAIN[Training<br/>Pipeline]
-        TRAIN --> VAL[Validation]
-        VAL --> MLF[MLflow<br/>Registry]
-    end
-
-    subgraph "Model Serving"
-        MLF --> DEPLOY[Model<br/>Deployment]
-        DEPLOY --> API[Prediction<br/>API]
-        API --> APP[Applications]
-    end
-
-    subgraph "Monitoring"
-        API --> METRICS[Performance<br/>Metrics]
-        METRICS --> DRIFT[Drift<br/>Detection]
-        DRIFT --> RETRAIN[Retrigger<br/>Training]
-    end
-
-    RETRAIN --> TRAIN
-```
-
-## Directory Structure
+## Project Structure
 
 ```
-end-to-end-pipeline/
-  ├── .devcontainer/                 # VS Code Dev Container settings
-  ├── docker-compose.yaml            # Docker orchestration for all services
-  ├── docker-compose.ci.yaml         # Docker Compose for CI/CD pipelines
-  ├── End_to_End_Data_Pipeline.ipynb # Jupyter notebook for pipeline overview
-  ├── requirements.txt               # Python dependencies for scripts
-  ├── .gitignore                     # Standard Git ignore file
-  ├── README.md                      # Comprehensive documentation (this file)
-  ├── airflow/
-  │   ├── Dockerfile                 # Custom Airflow image with dependencies
-  │   ├── requirements.txt           # Python dependencies for Airflow
-  │   └── dags/
-  │       ├── batch_ingestion_dag.py # Batch pipeline DAG
-  │       └── streaming_monitoring_dag.py  # Streaming monitoring DAG
-  ├── spark/
-  │   ├── Dockerfile                 # Custom Spark image with Kafka and S3 support
-  │   ├── spark_batch_job.py         # Spark batch ETL job
-  │   └── spark_streaming_job.py     # Spark streaming job
-  ├── kafka/
-  │   └── producer.py                # Kafka producer for simulating event streams
-  ├── storage/
-  │   ├── aws_s3_influxdb.py         # S3-InfluxDB integration stub
-  │   ├── hadoop_batch_processing.py  # Hadoop batch processing stub
-  │   └── mongodb_streaming.py       # MongoDB streaming integration stub
-  ├── great_expectations/
-  │   ├── great_expectations.yaml    # GE configuration
-  │   └── expectations/
-  │       └── raw_data_validation.py # GE suite for data quality
-  ├── governance/
-  │   └── atlas_stub.py              # Dataset lineage registration with Atlas/OpenMetadata
-  ├── monitoring/
-  │   ├── monitoring.py              # Python script to set up Prometheus & Grafana
-  │   └── prometheus.yml             # Prometheus configuration file
-  ├── ml/
-  │   ├── feature_store_stub.py      # Feature Store integration stub
-  │   └── mlflow_tracking.py         # MLflow model tracking
-  ├── kubernetes/
-  │   ├── argo-app.yaml              # Argo CD application manifest
-  │   └── deployment.yaml            # Kubernetes deployment manifest
-  ├── terraform/                     # Terraform scripts for cloud deployment
-  └── scripts/
-      └── init_db.sql                # SQL script to initialize MySQL and demo data
+├── airflow/
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── dags/
+│       ├── batch_ingestion_dag.py        # Daily batch ETL
+│       ├── streaming_monitoring_dag.py   # Kafka health monitoring
+│       └── warehouse_transform_dag.py    # Hourly warehouse ETL
+├── spark/
+│   ├── Dockerfile
+│   ├── spark_batch_job.py                # Batch ETL (MinIO → transform → PostgreSQL)
+│   └── spark_streaming_job.py            # Real-time Kafka consumer + anomaly detection
+├── kafka/
+│   ├── Dockerfile
+│   └── producer.py                       # Sensor data generator
+├── storage/
+│   ├── aws_s3_influxdb.py               # S3 + InfluxDB integration
+│   ├── hadoop_batch_processing.py        # Hadoop batch processing
+│   ├── mongodb_streaming.py              # MongoDB streaming integration
+│   └── redis_integration.py              # Redis caching layer
+├── great_expectations/
+│   ├── great_expectations.yaml
+│   └── expectations/
+│       └── raw_data_validation.py        # Data quality suite
+├── governance/
+│   └── atlas_stub.py                     # Apache Atlas lineage registration
+├── ml/
+│   ├── mlflow_tracking.py                # MLflow experiment tracking
+│   └── feature_store_stub.py             # Feature store integration
+├── monitoring/
+│   ├── monitoring.py                     # Prometheus + Grafana setup
+│   ├── prometheus.yml                    # Prometheus scrape config
+│   └── grafana-deployment-dashboards.json
+├── bi_dashboards/
+│   └── bi_dashboard.py                   # BI dashboard utilities
+├── sample_dotnet_backend/
+│   ├── Dockerfile                        # Multi-stage .NET 8 build
+│   ├── appsettings.json                  # Full config (DB, Kafka, MinIO, Airflow, Snowflake)
+│   ├── appsettings.Production.json       # Production overrides (Serilog level)
+│   └── src/DataPipelineApi/
+│       ├── DataPipelineApi.csproj        # .NET 8, Dapper, Confluent.Kafka, Serilog, Polly
+│       ├── Program.cs                    # ASP.NET Core setup, middleware, health endpoints
+│       ├── Controllers/                  # 7 controllers
+│       │   ├── BatchController.cs        #   POST /api/batch/ingest
+│       │   ├── StreamingController.cs    #   POST /api/stream/produce, /run
+│       │   ├── WarehouseController.cs    #   POST /api/warehouse/transform, GET /health, /snowflake/status
+│       │   ├── MLController.cs           #   POST /api/ml/run
+│       │   ├── GovernanceController.cs   #   POST /api/governance/lineage
+│       │   ├── CIController.cs           #   POST /api/ci/trigger
+│       │   └── MonitoringController.cs   #   GET /api/monitor/health
+│       ├── Services/                     # 10 services (Db, Kafka, MinIO, Batch, Streaming, Atlas, MLflow, GE, CI, Monitoring)
+│       ├── Models/                       # BatchRequest, StreamingRequest DTOs
+│       ├── Options/                      # 8 config classes (Database, Kafka, MinIO, Airflow, MLflow, Atlas, GE, GitHub)
+│       └── HealthChecks/                 # 6 checks (MySQL, PostgreSQL, Kafka, MinIO, Airflow, MLflow)
+├── scripts/
+│   ├── init_db.sql                       # MySQL schema + seed data
+│   ├── init_warehouse.sql                # PostgreSQL warehouse DDL
+│   ├── deploy.sh                         # Universal deploy script (local/K8s/AWS/GCP/Azure)
+│   ├── deploy-blue-green.sh              # Blue/green deployment orchestration
+│   ├── deploy-canary.sh                  # Canary deployment with metrics
+│   └── setup-advanced-deployments.sh     # Argo Rollouts + monitoring setup
+├── snowflake/
+│   ├── snowflake_connector.py            # Snowflake connection + loading utilities
+│   └── init_warehouse.sql                # Snowflake warehouse DDL (star schema + tasks + grants)
+├── helm/e2e-pipeline/                    # Helm chart (any K8s provider)
+│   ├── Chart.yaml                        # Chart metadata + sub-chart deps
+│   ├── values.yaml                       # Default values (all providers)
+│   ├── values-aws.yaml                   # AWS EKS overrides (gp3, ALB, ECR)
+│   ├── values-gcp.yaml                   # GCP GKE overrides (pd-ssd, GCE, GCR)
+│   ├── values-azure.yaml                 # Azure AKS overrides (managed-premium, ACR)
+│   ├── values-onprem.yaml                # On-prem overrides (local-path, reduced resources)
+│   └── templates/                        # 8 templates (airflow, spark, dotnet-api, kafka-producer, configmap, secrets, namespace)
+├── kubernetes/                           # Raw K8s manifests (Argo Rollouts, ingress, service monitors)
+├── terraform/                            # AWS IaC (VPC, EKS, RDS, S3, security groups, IAM)
+├── tests/
+│   ├── test_pipeline_config.py
+│   ├── test_kafka_producer.py
+│   ├── test_data_validation.py
+│   ├── test_warehouse_sql.py
+│   ├── test_snowflake.py
+│   └── test_docker_infrastructure.py
+├── packages/                             # Frontend assets
+├── .github/workflows/cicd-pipeline.yml   # CI/CD pipeline
+├── docker-compose.yaml                   # 20 services
+├── docker-compose.ci.yaml                # CI-specific compose
+├── .env.example                          # Environment template
+├── Makefile                              # Build and operations commands
+├── requirements.txt                      # Python dependencies
+├── index.html                            # Landing page
+├── ARCHITECTURE.md                       # Detailed architecture docs
+├── QUICK_START.md                        # Quick start guide
+└── DEPLOYMENT_STRATEGIES.md              # Deployment strategies
 ```
 
-## Components & Technologies
+## Configuration
 
-- **Ingestion & Orchestration:**  
-  - [Apache Airflow](https://airflow.apache.org/) – Schedules batch and streaming jobs.
-  - [Kafka](https://kafka.apache.org/) – Ingests streaming events.
-  - [Spark](https://spark.apache.org/) – Processes batch and streaming data.
+All configuration is driven by environment variables defined in `.env.example`.
 
-- **Storage & Processing:**  
-  - [MinIO](https://min.io/) – S3-compatible data lake.
-  - [PostgreSQL](https://www.postgresql.org/) – Stores transformed and processed data.
-  - [Great Expectations](https://greatexpectations.io/) – Enforces data quality.
-  - [AWS S3](https://aws.amazon.com/s3/) – Cloud storage integration.
-  - [InfluxDB](https://www.influxdata.com/) – Time-series data storage.
-  - [MongoDB](https://www.mongodb.com/) – NoSQL database integration.
-  - [Hadoop](https://hadoop.apache.org/) – Big data processing integration.
+| Section | Key Variables |
+|---------|--------------|
+| **PostgreSQL** | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` |
+| **MySQL** | `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_ROOT_PASSWORD` |
+| **Kafka** | `KAFKA_BROKER`, `KAFKA_TOPIC`, `KAFKA_ACKS_MODE` |
+| **Spark** | `SPARK_MASTER_URL`, `SPARK_DRIVER_MEMORY`, `SPARK_EXECUTOR_MEMORY` |
+| **Airflow** | `AIRFLOW__CORE__EXECUTOR`, `AIRFLOW_ADMIN_USER`, `AIRFLOW_ADMIN_PASSWORD` |
+| **MinIO** | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`, `MINIO_BUCKET_RAW`, `MINIO_BUCKET_PROCESSED` |
+| **Grafana** | `GRAFANA_ADMIN_USER`, `GRAFANA_ADMIN_PASS` |
+| **MLflow** | `MLFLOW_TRACKING_URI` |
+| **Redis** | `REDIS_HOST`, `REDIS_PORT` |
+| **MongoDB** | `MONGODB_URI`, `MONGODB_DB` |
+| **InfluxDB** | `INFLUXDB_URL`, `INFLUXDB_TOKEN`, `INFLUXDB_ORG`, `INFLUXDB_BUCKET` |
+| **Snowflake** | `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PASSWORD`, `SNOWFLAKE_WAREHOUSE`, `SNOWFLAKE_DATABASE` |
+| **Governance** | `ATLAS_API_URL`, `ATLAS_USERNAME`, `ATLAS_PASSWORD` |
 
-- **Monitoring & Governance:**  
-  - [Prometheus](https://prometheus.io/) – Metrics collection.
-  - [Grafana](https://grafana.com/) – Dashboard visualization.
-  - [Apache Atlas/OpenMetadata](https://atlas.apache.org/) – Data lineage and governance.
+### Snowflake Setup
 
-- **ML & Data Serving:**  
-  - [MLflow](https://mlflow.org/) – Experiment tracking.
-  - [Feast](https://feast.dev/) – Feature store for machine learning.
-  - [BI Tools](https://grafana.com/) – Real-time dashboards and insights.
+To enable the Snowflake data warehouse (optional -- PostgreSQL is used as fallback):
 
-## Setup Instructions
+```bash
+# 1. Set Snowflake credentials in .env
+SNOWFLAKE_ACCOUNT=your_account.us-east-1
+SNOWFLAKE_USER=your_user
+SNOWFLAKE_PASSWORD=your_password
 
-### Prerequisites
+# 2. Initialize the Snowflake warehouse schema
+snowsql -a $SNOWFLAKE_ACCOUNT -u $SNOWFLAKE_USER -f snowflake/init_warehouse.sql
 
-- **Docker** and **Docker Compose** must be installed.
-- Ensure that **Python 3.9+** is installed locally if you want to run scripts outside of Docker.
-- Open ports required:  
-  - Airflow: 8080  
-  - MySQL: 3306  
-  - PostgreSQL: 5432  
-  - MinIO: 9000 (and console on 9001)  
-  - Kafka: 9092  
-  - Prometheus: 9090  
-  - Grafana: 3000  
-
-### Step-by-Step Guide
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/hoangsonww/End-to-End-Data-Pipeline.git
-   cd End-to-End-Data-Pipeline
-   ```
-
-2. **Start the Pipeline Stack**
-
-   Use Docker Compose to launch all components:
-   
-   ```bash
-   docker-compose up --build
-   ```
-   
-   This command will:
-   - Build custom Docker images for Airflow and Spark.
-   - Start MySQL, PostgreSQL, Kafka (with Zookeeper), MinIO, Prometheus, Grafana, and Airflow webserver.
-   - Initialize the MySQL database with demo data (via `scripts/init_db.sql`).
-
-3. **Access the Services**
-   - **Airflow UI:** [http://localhost:8080](http://localhost:8080)  
-     Set up connections:  
-     - `mysql_default` → Host: `mysql`, DB: `source_db`, User: `user`, Password: `pass`
-     - `postgres_default` → Host: `postgres`, DB: `processed_db`, User: `user`, Password: `pass`
-   - **MinIO Console:** [http://localhost:9001](http://localhost:9001) (User: `minio`, Password: `minio123`)
-   - **Kafka:** Accessible on port `9092`
-   - **Prometheus:** [http://localhost:9090](http://localhost:9090)
-   - **Grafana:** [http://localhost:3000](http://localhost:3000) (Default login: `admin/admin`)
-
-4. **Run Batch Pipeline**
-   - In the Airflow UI, enable the `batch_ingestion_dag` to run the end-to-end batch pipeline.
-   - This DAG extracts data from MySQL, validates it, uploads raw data to MinIO, triggers a Spark job for transformation, and loads data into PostgreSQL.
-
-5. **Run Streaming Pipeline**
-   - Open a terminal and start the Kafka producer:
-     ```bash
-     docker-compose exec kafka python /opt/spark_jobs/../kafka/producer.py
-     ```
-   - In another terminal, run the Spark streaming job:
-     ```bash
-     docker-compose exec spark spark-submit --master local[2] /opt/spark_jobs/spark_streaming_job.py
-     ```
-   - The streaming job consumes events from Kafka, performs real-time anomaly detection, and writes results to PostgreSQL and MinIO.
-
-6. **Monitoring & Governance**
-   - **Prometheus & Grafana:**  
-     Use the `monitoring.py` script (or access Grafana) to view real-time metrics and dashboards.
-   - **Data Lineage:**  
-     The `governance/atlas_stub.py` script registers lineage between datasets (can be extended for full Apache Atlas integration).
-
-7. **ML & Feature Store**
-   - Use `ml/mlflow_tracking.py` to simulate model training and tracking.
-   - Use `ml/feature_store_stub.py` to integrate with a feature store like Feast.
-
-8. **CI/CD & Deployment**
-    - Use the `docker-compose.ci.yaml` file to set up CI/CD pipelines.
-    - Use the `kubernetes/` directory for Kubernetes deployment manifests.
-    - Use the `terraform/` directory for cloud deployment scripts.
-    - Use the `.github/workflows/` directory for GitHub Actions CI/CD workflows.
-
-### Next Steps
-
-Congratulations! You have successfully set up the end-to-end data pipeline with batch and streaming processing. However, this is a very general pipeline that needs to be customized for your specific use case.
-
-> [!IMPORTANT]
-> Note: Be sure to visit the files and scripts in the repository and change the credentials, configurations, and logic to match your environment and use case. Feel free to extend the pipeline with additional components, services, or integrations as needed.
-
-## Configuration & Customization
-
-- **Docker Compose:**  
-  All services are defined in `docker-compose.yaml`. Adjust resource limits, environment variables, and service dependencies as needed.
-
-- **Airflow:**  
-  Customize DAGs in the `airflow/dags/` directory. Use the provided PythonOperators to integrate custom processing logic.
-
-- **Spark Jobs:**  
-  Edit transformation logic in `spark/spark_batch_job.py` and `spark/spark_streaming_job.py` to match your data and processing requirements.
-
-- **Kafka Producer:**  
-  Modify `kafka/producer.py` to simulate different types of events or adjust the batch size and frequency using environment variables.
-
-- **Monitoring:**  
-  Update `monitoring/monitoring.py` and `prometheus.yml` to scrape additional metrics or customize dashboards. Place Grafana dashboard JSON files in the `monitoring/grafana_dashboards/` directory.
-
-- **Governance & ML:**  
-  Replace stub implementations in `governance/atlas_stub.py` and `ml/` with real integrations as needed.
-
-- **CI/CD & Deployment:**  
-  Customize CI/CD workflows in `.github/workflows/` and deployment manifests in `kubernetes/` and `terraform/` for your cloud environment.
-
-- **Storage:**
-
-    Data storage options are in the `storage/` directory with AWS S3, InfluxDB, MongoDB, and Hadoop stubs. Replace these with real integrations or credentials as needed.
-
-## Example Applications
-
-```mermaid
-%%{init: {"theme": "default", "themeVariables": { "primaryColor": "#f9f9f9", "fontSize": "14px", "lineColor": "#000000", "textColor": "#000000", "background": "#ffffff"}}}%%
-mindmap
-  root((Data Pipeline<br/>Use Cases))
-    E-Commerce
-      Real-Time Recommendations
-        Clickstream Processing
-        User Behavior Analysis
-        Personalized Content
-      Fraud Detection
-        Transaction Monitoring
-        Pattern Recognition
-        Risk Scoring
-    Finance
-      Risk Analysis
-        Credit Assessment
-        Portfolio Analytics
-        Market Risk
-      Trade Surveillance
-        Market Data Processing
-        Compliance Monitoring
-        Anomaly Detection
-    Healthcare
-      Patient Monitoring
-        IoT Sensor Data
-        Real-time Alerts
-        Predictive Analytics
-      Clinical Trials
-        Data Integration
-        Outcome Prediction
-        Drug Efficacy Analysis
-    IoT/Manufacturing
-      Predictive Maintenance
-        Sensor Analytics
-        Failure Prediction
-        Maintenance Scheduling
-      Supply Chain
-        Inventory Optimization
-        Logistics Tracking
-        Demand Forecasting
-    Media
-      Sentiment Analysis
-        Social Media Streams
-        Brand Monitoring
-        Trend Detection
-      Ad Fraud Detection
-        Click Pattern Analysis
-        Bot Detection
-        Campaign Analytics
+# 3. The warehouse_transform_dag will automatically use Snowflake when configured
 ```
 
-### E-Commerce & Retail
-- **Real-Time Recommendations:**
-  Process clickstream data to generate personalized product recommendations.
-- **Fraud Detection:**
-  Detect unusual purchasing patterns or multiple high-value transactions in real-time.
+To customize, copy the example and edit:
 
-### Financial Services & Banking
-- **Risk Analysis:**
-  Aggregate transaction data to assess customer credit risk.
-- **Trade Surveillance:**
-  Monitor market data and employee trades for insider trading signals.
-
-### Healthcare & Life Sciences
-- **Patient Monitoring:**
-  Process sensor data from medical devices to alert healthcare providers of critical conditions.
-- **Clinical Trial Analysis:**
-  Analyze historical trial data for predictive analytics in treatment outcomes.
-
-### IoT & Manufacturing
-- **Predictive Maintenance:**
-  Monitor sensor data from machinery to predict failures before they occur.
-- **Supply Chain Optimization:**
-  Aggregate data across manufacturing processes to optimize production and logistics.
-
-### Media & Social Networks
-- **Sentiment Analysis:**
-  Analyze social media feeds in real-time to gauge public sentiment on new releases.
-- **Ad Fraud Detection:**
-  Identify and block fraudulent clicks on digital advertisements.
-
-Feel free to use this pipeline as a starting point for your data processing needs. Extend it with additional components, services, or integrations to build a robust, end-to-end data platform.
-
-## Troubleshooting & Further Considerations
-
-- **Service Not Starting:**  
-  Check Docker logs (`docker-compose logs`) to troubleshoot errors with MySQL, Kafka, Airflow, or Spark.
-- **Airflow Connection Issues:**  
-  Verify that connection settings (host, user, password) in the Airflow UI match those in `docker-compose.yaml`.
-- **Data Quality Errors:**  
-  Inspect Great Expectations logs in the Airflow DAG runs to adjust expectations and clean data.
-- **Resource Constraints:**  
-  For production use, consider scaling out services (e.g., running Spark on a dedicated cluster, using managed Kafka).
+```bash
+cp .env.example .env
+# Edit .env with your values
+```
 
 ## Contributing
 
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a Pull Request
-6. We will review your changes and merge them into the main branch upon approval.
 
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
-## Final Notes
-
-> [!NOTE]
-> This end-to-end data pipeline is designed for rapid deployment and customization. With minor configuration changes, it can be adapted to many business cases—from real-time analytics and fraud detection to predictive maintenance and advanced ML model training. Enjoy building a data-driven future with this pipeline!
-
 ---
 
-Thanks for reading! If you found this repository helpful, please star it and share it with others. For questions, feedback, or suggestions, feel free to reach out to me on [GitHub](https://github.com/hoangsonww).
-
-[**⬆️ Back to top**](#end-to-end-data-pipeline-with-batch--streaming-processing)
+For questions or feedback, reach out on [GitHub](https://github.com/hoangsonww).

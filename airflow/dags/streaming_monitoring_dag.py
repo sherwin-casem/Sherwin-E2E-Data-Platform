@@ -1,92 +1,127 @@
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from datetime import datetime
 import logging
-from kafka import KafkaAdminClient, KafkaConsumer
-from kafka.admin import NewTopic
-from kafka.errors import KafkaError
+import os
+from datetime import datetime, timedelta
 
-# Kafka Configuration
-KAFKA_BROKER = "kafka:9092"  # Replace with your Kafka broker if needed
-KAFKA_TOPIC = "sensor_readings"
-CONSUMER_GROUP = "sensor_readings_consumer"
-LAG_THRESHOLD = 10  # Adjust this threshold as per business needs
+from airflow.operators.python import PythonOperator
+
+from airflow import DAG
+
+logger = logging.getLogger(__name__)
+
+KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:29092")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "sensor_readings")
+CONSUMER_GROUP = "sensor_readings_monitor"
+LAG_THRESHOLD = int(os.getenv("KAFKA_LAG_THRESHOLD", "100"))
 
 
-def check_kafka_consumer_lag():
-    """
-    Connects to Kafka, retrieves consumer group lag, and logs warnings if lag exceeds threshold.
-    """
+def check_kafka_health(**kwargs):
+    """Check Kafka broker connectivity and topic status."""
+    from kafka import KafkaAdminClient
+    from kafka.errors import KafkaError
 
     try:
-        logging.info(f"Connecting to Kafka broker: {KAFKA_BROKER}")
+        logger.info("Connecting to Kafka broker: %s", KAFKA_BROKER)
+        admin_client = KafkaAdminClient(
+            bootstrap_servers=KAFKA_BROKER,
+            request_timeout_ms=10000,
+        )
 
-        # Initialize Kafka Admin Client
-        admin_client = KafkaAdminClient(bootstrap_servers=KAFKA_BROKER)
+        topics = admin_client.list_topics()
+        logger.info("Available Kafka topics: %s", topics)
 
-        # Fetch Consumer Group Offsets
-        consumer_offsets = admin_client.list_consumer_groups()
-        consumer_group_info = admin_client.describe_consumer_groups([CONSUMER_GROUP])
+        if KAFKA_TOPIC not in topics:
+            logger.warning("Topic '%s' not found in Kafka.", KAFKA_TOPIC)
 
-        logging.info(f"Consumer groups: {consumer_offsets}")
-
-        for group in consumer_group_info:
-            logging.info(
-                f"Consumer Group: {group['group_id']}, State: {group['state']}, Members: {len(group['members'])}")
-
-        # Fetch Kafka Partitions and Offsets
-        consumer = KafkaConsumer(KAFKA_TOPIC, bootstrap_servers=KAFKA_BROKER, group_id=CONSUMER_GROUP,
-                                 enable_auto_commit=False)
-        partitions = consumer.partitions_for_topic(KAFKA_TOPIC)
-
-        logging.info(f"Partitions for topic '{KAFKA_TOPIC}': {partitions}")
-
-        for partition in partitions:
-            topic_partition = f"{KAFKA_TOPIC}-{partition}"
-            committed_offset = consumer.committed(topic_partition)
-
-            if committed_offset is not None:
-                log_message = f"Partition {partition}: Committed Offset = {committed_offset}"
-                logging.info(log_message)
-
-                # Fetch the latest offset
-                end_offsets = consumer.end_offsets([topic_partition])
-                latest_offset = end_offsets.get(topic_partition, 0)
-
-                # Calculate Lag
-                lag = latest_offset - committed_offset
-                logging.info(f"Partition {partition}: Latest Offset = {latest_offset}, Consumer Lag = {lag}")
-
-                # Raise alert if lag exceeds threshold
-                if lag > LAG_THRESHOLD:
-                    logging.warning(f"ALERT! Consumer lag detected on {topic_partition}. Lag: {lag}")
-
-            else:
-                logging.warning(f"No committed offset found for partition {partition}")
-
-        logging.info("Kafka consumer lag monitoring complete.")
+        admin_client.close()
+        logger.info("Kafka health check passed.")
 
     except KafkaError as e:
-        logging.error(f"Kafka connection error: {str(e)}")
+        logger.error("Kafka connection error: %s", str(e))
+        raise
+    except Exception as e:
+        logger.error("Kafka monitoring error: %s", str(e))
+        raise
 
-    except Exception as ex:
-        logging.error(f"Error while monitoring Kafka consumer lag: {str(ex)}")
+
+def check_kafka_consumer_lag(**kwargs):
+    """Monitor consumer group lag for the sensor_readings topic."""
+    from kafka import KafkaConsumer, TopicPartition
+    from kafka.errors import KafkaError
+
+    try:
+        consumer = KafkaConsumer(
+            bootstrap_servers=KAFKA_BROKER,
+            group_id=CONSUMER_GROUP,
+            enable_auto_commit=False,
+            request_timeout_ms=10000,
+        )
+
+        partitions = consumer.partitions_for_topic(KAFKA_TOPIC)
+        if not partitions:
+            logger.warning("No partitions found for topic '%s'.", KAFKA_TOPIC)
+            consumer.close()
+            return
+
+        total_lag = 0
+        for partition in partitions:
+            tp = TopicPartition(KAFKA_TOPIC, partition)
+            consumer.assign([tp])
+            consumer.seek_to_end(tp)
+            end_offset = consumer.position(tp)
+            committed = consumer.committed(tp)
+            committed_offset = committed if committed is not None else 0
+
+            lag = end_offset - committed_offset
+            total_lag += lag
+            logger.info(
+                "Partition %d: end=%d, committed=%d, lag=%d",
+                partition,
+                end_offset,
+                committed_offset,
+                lag,
+            )
+
+        if total_lag > LAG_THRESHOLD:
+            logger.warning(
+                "Total consumer lag (%d) exceeds threshold (%d)!",
+                total_lag,
+                LAG_THRESHOLD,
+            )
+
+        consumer.close()
+        logger.info("Consumer lag monitoring complete. Total lag: %d", total_lag)
+
+    except KafkaError as e:
+        logger.error("Kafka consumer lag check failed: %s", str(e))
+        raise
 
 
-# Airflow DAG Configuration
 default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2023, 1, 1),
-    'retries': 1
+    "owner": "data-engineering",
+    "depends_on_past": False,
+    "retries": 1,
+    "retry_delay": timedelta(minutes=2),
+    "start_date": datetime(2024, 1, 1),
 }
 
 with DAG(
-        dag_id='streaming_monitoring_dag',
-        default_args=default_args,
-        schedule_interval='@hourly',
-        catchup=False
+    dag_id="streaming_monitoring_dag",
+    default_args=default_args,
+    description="Monitor Kafka streaming health and consumer lag",
+    schedule="*/15 * * * *",
+    catchup=False,
+    tags=["streaming", "monitoring"],
 ) as dag:
-    monitor_kafka_task = PythonOperator(
-        task_id='monitor_kafka_consumer_lag',
-        python_callable=check_kafka_consumer_lag
+    health_check = PythonOperator(
+        task_id="check_kafka_health",
+        python_callable=check_kafka_health,
+        execution_timeout=timedelta(minutes=5),
     )
+
+    lag_check = PythonOperator(
+        task_id="check_kafka_consumer_lag",
+        python_callable=check_kafka_consumer_lag,
+        execution_timeout=timedelta(minutes=5),
+    )
+
+    health_check >> lag_check

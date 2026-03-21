@@ -1,11 +1,12 @@
-FROM apache/airflow:2.5.0-python3.9
+FROM apache/airflow:2.7.3-python3.10
 
 USER root
-RUN apt-get update && apt-get install -y gcc libpq-dev
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc libpq-dev curl default-libmysqlclient-dev pkg-config && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 USER airflow
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# The default entrypoint/cmd from apache/airflow will start the scheduler/webserver
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt

@@ -1,158 +1,153 @@
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+import logging
+import os
+from datetime import datetime, timedelta
+
+import boto3
+import pandas as pd
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from airflow.operators.bash_operator import BashOperator
-from datetime import datetime
-import pandas as pd
-import boto3
-import logging
 
-# Great Expectations
 import great_expectations as ge
+from airflow import DAG
+
+logger = logging.getLogger(__name__)
+
+# Configuration from environment
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://minio:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ROOT_USER", "minio")
+MINIO_SECRET_KEY = os.getenv("MINIO_ROOT_PASSWORD", "minio_secret_2024")
+MINIO_BUCKET_RAW = os.getenv("MINIO_BUCKET_RAW", "raw-data")
 
 default_args = {
-    'owner': 'airflow',
-    'start_date': datetime(2023, 1, 1),
-    'retries': 1
+    "owner": "data-engineering",
+    "depends_on_past": False,
+    "email_on_failure": False,
+    "email_on_retry": False,
+    "retries": 2,
+    "retry_delay": timedelta(minutes=5),
+    "start_date": datetime(2024, 1, 1),
 }
 
 
 def extract_data_from_mysql(**kwargs):
-    """
-    Extract batch data from MySQL.
-    Pulls data from the 'orders' table and writes it to /tmp/orders.csv.
-    """
-    logging.info("Starting extraction from MySQL...")
+    """Extract batch data from MySQL orders table."""
+    logger.info("Extracting data from MySQL...")
     mysql_hook = MySqlHook(mysql_conn_id="mysql_default")
-    df = mysql_hook.get_pandas_df("SELECT * FROM orders;")
+    df = mysql_hook.get_pandas_df("SELECT * FROM orders")
     df.to_csv("/tmp/orders.csv", index=False)
-    logging.info(f"Extracted {len(df)} records from MySQL and saved to /tmp/orders.csv.")
+    logger.info("Extracted %d records from MySQL.", len(df))
+    return len(df)
 
 
 def validate_data_with_ge(**kwargs):
-    """
-    Validate extracted data with Great Expectations.
-    - Ensures 'order_id' is not null
-    - Ensures 'amount' is not zero or negative
-    """
-    logging.info("Running Great Expectations validation on /tmp/orders.csv...")
+    """Validate extracted data with Great Expectations."""
+    logger.info("Running Great Expectations validation...")
     df = pd.read_csv("/tmp/orders.csv")
     ge_df = ge.from_pandas(df)
 
-    # 1) Expect no null in 'order_id'
     result_order_id = ge_df.expect_column_values_to_not_be_null("order_id")
     if not result_order_id["success"]:
-        raise ValueError("Data validation failed: 'order_id' has null values")
+        raise ValueError("Validation failed: 'order_id' has null values")
 
-    # 2) Expect 'amount' to be strictly greater than 0
-    result_amount = ge_df.expect_column_values_to_be_between("amount", 0.01, 9999999, strictly=True)
+    result_amount = ge_df.expect_column_values_to_be_between("amount", min_value=0.01, max_value=9999999)
     if not result_amount["success"]:
-        raise ValueError("Data validation failed: 'amount' is not strictly positive")
+        raise ValueError("Validation failed: 'amount' is not strictly positive")
 
-    logging.info("Great Expectations validations passed.")
+    logger.info("Data validation passed.")
 
 
 def load_to_minio(**kwargs):
-    """
-    Load raw data CSV to MinIO (S3-compatible).
-    Bucket: 'raw-data'
-    Key: 'orders/orders.csv'
-    """
-    logging.info("Uploading CSV to MinIO (raw-data bucket)...")
+    """Upload raw CSV to MinIO S3-compatible storage."""
+    logger.info("Uploading CSV to MinIO bucket '%s'...", MINIO_BUCKET_RAW)
     s3 = boto3.client(
-        's3',
-        endpoint_url='http://minio:9000',
-        aws_access_key_id='minio',
-        aws_secret_access_key='minio123',
-        region_name='us-east-1'
+        "s3",
+        endpoint_url=MINIO_ENDPOINT,
+        aws_access_key_id=MINIO_ACCESS_KEY,
+        aws_secret_access_key=MINIO_SECRET_KEY,
+        region_name="us-east-1",
     )
-    bucket_name = "raw-data"
-    # Attempt to create bucket if not exists
-    try:
-        s3.create_bucket(Bucket=bucket_name)
-        logging.info(f"Bucket '{bucket_name}' created or already exists.")
-    except Exception as e:
-        logging.info(f"Bucket creation skipped (possibly exists): {e}")
 
-    # Upload file
-    s3.upload_file("/tmp/orders.csv", bucket_name, "orders/orders.csv")
-    logging.info("File successfully uploaded to MinIO.")
+    try:
+        s3.head_bucket(Bucket=MINIO_BUCKET_RAW)
+    except Exception:
+        s3.create_bucket(Bucket=MINIO_BUCKET_RAW)
+        logger.info("Created bucket '%s'.", MINIO_BUCKET_RAW)
+
+    s3.upload_file("/tmp/orders.csv", MINIO_BUCKET_RAW, "orders/orders.csv")
+    logger.info("File uploaded to MinIO.")
 
 
 def load_to_postgres(**kwargs):
-    """
-    Load final transformed data into Postgres table 'orders_transformed'.
-    Assumes Spark job wrote /tmp/transformed_orders.csv locally.
-
-    Table schema:
-    - order_id INT
-    - customer_id INT
-    - amount DECIMAL(10,2)
-    - processed_timestamp TIMESTAMP
-    """
-    logging.info("Starting load into Postgres from /tmp/transformed_orders.csv...")
+    """Load transformed data into PostgreSQL."""
+    logger.info("Loading data into PostgreSQL...")
     pg_hook = PostgresHook(postgres_conn_id="postgres_default")
+
+    pg_hook.run("""
+        CREATE TABLE IF NOT EXISTS orders_transformed (
+            order_id INT,
+            customer_id INT,
+            amount DECIMAL(10,2),
+            processed_timestamp TIMESTAMP
+        )
+    """)
+    pg_hook.run("TRUNCATE TABLE orders_transformed")
+
     df = pd.read_csv("/tmp/transformed_orders.csv")
-
-    pg_hook.run("CREATE TABLE IF NOT EXISTS orders_transformed ( \
-        order_id INT, \
-        customer_id INT, \
-        amount DECIMAL(10,2), \
-        processed_timestamp TIMESTAMP );")
-
-    # Clear table before load
-    pg_hook.run("TRUNCATE TABLE orders_transformed;")
-
-    # Insert row by row (simple approach)
     rows_loaded = 0
     for _, row in df.iterrows():
-        insert_sql = """
-        INSERT INTO orders_transformed(order_id, customer_id, amount, processed_timestamp)
-        VALUES (%s, %s, %s, %s)
-        """
-        pg_hook.run(insert_sql, parameters=(
-            row['order_id'],
-            row['customer_id'],
-            row['amount'],
-            row['processed_timestamp']
-        ))
+        pg_hook.run(
+            """INSERT INTO orders_transformed(order_id, customer_id, amount, processed_timestamp)
+               VALUES (%s, %s, %s, %s)""",
+            parameters=(
+                row["order_id"],
+                row["customer_id"],
+                row["amount"],
+                row["processed_timestamp"],
+            ),
+        )
         rows_loaded += 1
 
-    logging.info(f"Finished loading {rows_loaded} records into Postgres (orders_transformed).")
+    logger.info("Loaded %d records into PostgreSQL.", rows_loaded)
 
 
 with DAG(
-        dag_id='batch_ingestion_dag',
-        default_args=default_args,
-        schedule_interval='@daily',
-        catchup=False
+    dag_id="batch_ingestion_dag",
+    default_args=default_args,
+    description="Batch ETL: MySQL -> Validation -> MinIO -> Spark -> PostgreSQL",
+    schedule="@daily",
+    catchup=False,
+    tags=["batch", "etl"],
 ) as dag:
     extract_task = PythonOperator(
-        task_id='extract_mysql',
-        python_callable=extract_data_from_mysql
+        task_id="extract_mysql",
+        python_callable=extract_data_from_mysql,
+        execution_timeout=timedelta(minutes=10),
     )
 
     validate_task = PythonOperator(
-        task_id='validate_data',
-        python_callable=validate_data_with_ge
+        task_id="validate_data",
+        python_callable=validate_data_with_ge,
+        execution_timeout=timedelta(minutes=5),
     )
 
     load_to_minio_task = PythonOperator(
-        task_id='load_to_minio',
-        python_callable=load_to_minio
+        task_id="load_to_minio",
+        python_callable=load_to_minio,
+        execution_timeout=timedelta(minutes=10),
     )
 
-    # trigger Spark job with BashOperator
     spark_transform_task = BashOperator(
-        task_id='spark_transform',
-        bash_command='spark-submit --master local[2] /opt/spark_jobs/spark_batch_job.py'
+        task_id="spark_transform",
+        bash_command="spark-submit --master local[2] /opt/spark_jobs/spark_batch_job.py",
+        execution_timeout=timedelta(minutes=30),
     )
 
     load_postgres_task = PythonOperator(
-        task_id='load_to_postgres',
-        python_callable=load_to_postgres
+        task_id="load_to_postgres",
+        python_callable=load_to_postgres,
+        execution_timeout=timedelta(minutes=15),
     )
 
-    # Define task dependencies
-    extract_task >> validate_task >> load_to_minio_task >> spark_transform_task >> load_postgres_task
+    (extract_task >> validate_task >> load_to_minio_task >> spark_transform_task >> load_postgres_task)

@@ -10,21 +10,21 @@ namespace DataPipelineApi.HealthChecks;
 
 public class MySqlHealthCheck : IHealthCheck
 {
-  private readonly DatabaseOptions _options;
+    private readonly DatabaseOptions _options;
 
-  public MySqlHealthCheck(IOptions<DatabaseOptions> options) => _options = options.Value;
+    public MySqlHealthCheck(IOptions<DatabaseOptions> options) => _options = options.Value;
 
-  public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-  {
-    try
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-      await using var conn = new MySqlConnection(_options.MySql);
-      await conn.OpenAsync(cancellationToken);
-      return HealthCheckResult.Healthy();
+        try
+        {
+            await using var conn = new MySqlConnection(_options.MySql);
+            await conn.OpenAsync(cancellationToken);
+            return HealthCheckResult.Healthy();
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("MySQL connection failed", ex);
+        }
     }
-    catch (Exception ex)
-    {
-      return HealthCheckResult.Unhealthy("MySQL connection failed", ex);
-    }
-  }
 }
