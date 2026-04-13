@@ -235,24 +235,50 @@ document.querySelectorAll('a[href^="http"]').forEach((link) => {
 // Highlight active section in navigation
 const sections = document.querySelectorAll('.section[id]');
 const navLinks = document.querySelectorAll('.nav-link');
+let currentActiveSection = '';
 
-window.addEventListener('scroll', () => {
-  let current = '';
+const updateActiveNavLink = () => {
+  if (!sections.length || !navLinks.length) {
+    return;
+  }
+
+  const viewportMidpoint = window.scrollY + window.innerHeight * 0.4;
+  let nextActiveSection = sections[0].getAttribute('id');
+
   sections.forEach((section) => {
-    const sectionTop = section.offsetTop;
-    const sectionHeight = section.clientHeight;
-    if (pageYOffset >= sectionTop - 100) {
-      current = section.getAttribute('id');
+    if (viewportMidpoint >= section.offsetTop) {
+      nextActiveSection = section.getAttribute('id');
     }
   });
 
+  if (nextActiveSection === currentActiveSection) {
+    return;
+  }
+
+  currentActiveSection = nextActiveSection;
   navLinks.forEach((link) => {
-    link.classList.remove('active');
-    if (link.getAttribute('href').substring(1) === current) {
-      link.classList.add('active');
-    }
+    link.classList.toggle('active', link.getAttribute('href').substring(1) === currentActiveSection);
   });
-});
+};
+
+let navHighlightTicking = false;
+window.addEventListener(
+  'scroll',
+  () => {
+    if (navHighlightTicking) {
+      return;
+    }
+    navHighlightTicking = true;
+    requestAnimationFrame(() => {
+      updateActiveNavLink();
+      navHighlightTicking = false;
+    });
+  },
+  { passive: true },
+);
+
+window.addEventListener('resize', updateActiveNavLink);
+updateActiveNavLink();
 
 // Add ripple effect to buttons
 document.querySelectorAll('.btn-primary, .btn-secondary, .cta-button').forEach((button) => {
