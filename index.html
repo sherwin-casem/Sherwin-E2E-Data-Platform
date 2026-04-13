@@ -46,16 +46,27 @@
     <header class="header">
       <nav class="nav-container">
         <div class="logo">
-          <span class="logo-icon">🚀</span>
           <span>E2E Data Pipeline</span>
         </div>
-        <ul class="nav-menu">
-          <li><a href="#overview" class="nav-link">Overview</a></li>
-          <li><a href="#architecture" class="nav-link">Architecture</a></li>
-          <li><a href="#technologies" class="nav-link">Technologies</a></li>
-          <li><a href="#features" class="nav-link">Features</a></li>
-          <li><a href="#deployment" class="nav-link">Deployment</a></li>
-          <li><a href="#getting-started" class="nav-link">Get Started</a></li>
+        <button
+          class="mobile-menu-toggle"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+        >
+          <span class="mobile-menu-toggle__icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+        <ul class="nav-menu" id="primary-navigation">
+          <li><a href="#overview" class="nav-link"><span class="nav-link-text">Overview</span></a></li>
+          <li><a href="#architecture" class="nav-link"><span class="nav-link-text">Architecture</span></a></li>
+          <li><a href="#technologies" class="nav-link"><span class="nav-link-text">Technologies</span></a></li>
+          <li><a href="#features" class="nav-link"><span class="nav-link-text">Features</span></a></li>
+          <li><a href="#deployment" class="nav-link"><span class="nav-link-text">Deployment</span></a></li>
+          <li><a href="#getting-started" class="nav-link"><span class="nav-link-text">Get Started</span></a></li>
           <li><a href="https://github.com/hoangsonww/End-to-End-Data-Pipeline" class="cta-button">GitHub</a></li>
         </ul>
       </nav>
@@ -73,14 +84,49 @@
         </p>
 
         <div class="hero-badges">
-          <span class="badge">🔥 20 Docker Services</span>
-          <span class="badge">⚡ Real-Time Streaming</span>
-          <span class="badge">❄️ Snowflake Warehouse</span>
-          <span class="badge">📊 MLflow + Spark</span>
-          <span class="badge">🌐 Multi-Cloud Deploy</span>
-          <span class="badge">🚀 Helm + Terraform</span>
-          <span class="badge">🔧 .NET 8 API</span>
-          <span class="badge">📦 49 Tests Passing</span>
+          <div class="marquee-track">
+            <span class="badge">🔥 20 Docker Services</span>
+            <span class="badge">⚡ Real-Time Streaming</span>
+            <span class="badge">❄️ Snowflake Warehouse</span>
+            <span class="badge">📊 MLflow + Spark</span>
+            <span class="badge">🌐 Multi-Cloud Deploy</span>
+            <span class="badge">🚀 Helm + Terraform</span>
+            <span class="badge">🔧 .NET 8 API</span>
+            <span class="badge">📦 49 Tests Passing</span>
+            <span class="badge">🌀 3 Airflow DAGs</span>
+            <span class="badge">🐳 Docker Compose</span>
+            <span class="badge">📈 Grafana Dashboards</span>
+            <span class="badge">🔍 Elasticsearch Logs</span>
+            <span class="badge">🍃 MongoDB + Redis</span>
+            <span class="badge">🐘 PostgreSQL Analytics</span>
+            <span class="badge">☸️ Kubernetes Ready</span>
+            <span class="badge">🔄 GitOps with Argo CD</span>
+            <span class="badge">📊 BI Dashboard Exports</span>
+            <span class="badge">🧪 Great Expectations</span>
+            <span class="badge">🔬 MLflow Experiments</span>
+            <span class="badge">🗺️ Apache Atlas Lineage</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="badge">🔥 20 Docker Services</span>
+            <span class="badge">⚡ Real-Time Streaming</span>
+            <span class="badge">❄️ Snowflake Warehouse</span>
+            <span class="badge">📊 MLflow + Spark</span>
+            <span class="badge">🌐 Multi-Cloud Deploy</span>
+            <span class="badge">🚀 Helm + Terraform</span>
+            <span class="badge">🔧 .NET 8 API</span>
+            <span class="badge">📦 49 Tests Passing</span>
+            <span class="badge">🌀 3 Airflow DAGs</span>
+            <span class="badge">🐳 Docker Compose</span>
+            <span class="badge">📈 Grafana Dashboards</span>
+            <span class="badge">🔍 Elasticsearch Logs</span>
+            <span class="badge">🍃 MongoDB + Redis</span>
+            <span class="badge">🐘 PostgreSQL Analytics</span>
+            <span class="badge">☸️ Kubernetes Ready</span>
+            <span class="badge">🔄 GitOps with Argo CD</span>
+            <span class="badge">📊 BI Dashboard Exports</span>
+            <span class="badge">🧪 Great Expectations</span>
+            <span class="badge">🔬 MLflow Experiments</span>
+            <span class="badge">🗺️ Apache Atlas Lineage</span>
+          </div>
         </div>
 
         <div class="hero-actions">
@@ -190,6 +236,16 @@
             <strong>Cloud:</strong> Helm chart with AWS/GCP/Azure/on-prem value overrides<br /><br />
             <strong>IaC:</strong> Terraform (VPC, EKS, RDS, S3) + Argo CD GitOps<br /><br />
             <strong>CI/CD:</strong> GitHub Actions (lint, test, build, integration)
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">BI Dashboard Integration</h3>
+          <p class="feature-description">
+            <strong>Platforms:</strong> Tableau, Looker, and Power BI export pipelines<br /><br />
+            <strong>Data:</strong> Queries Snowflake warehouse (or PostgreSQL fallback) and uploads aggregated analytics<br /><br />
+            <strong>Exports:</strong> Automated CSV/Parquet exports for daily orders, revenue trends, and customer segmentation
           </p>
         </div>
       </div>
@@ -421,6 +477,28 @@ graph TB
               <li class="tech-item">📝 HCL - Terraform Infrastructure</li>
             </ul>
           </div>
+
+          <div class="tech-category">
+            <h3 class="tech-category-title">🧪 Testing & Quality</h3>
+            <ul class="tech-list">
+              <li class="tech-item">🐍 pytest - Python Test Framework (49 tests)</li>
+              <li class="tech-item">✨ Great Expectations - Data Quality Suites</li>
+              <li class="tech-item">🐳 Docker Tests - Infrastructure Validation</li>
+              <li class="tech-item">📫 Kafka Tests - Producer & Consumer Checks</li>
+              <li class="tech-item">❄️ Snowflake Tests - Warehouse SQL Validation</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h3 class="tech-category-title">📊 BI & Analytics</h3>
+            <ul class="tech-list">
+              <li class="tech-item">📈 Tableau - Enterprise Dashboards</li>
+              <li class="tech-item">🔍 Looker - Data Exploration & Modeling</li>
+              <li class="tech-item">📊 Power BI - Microsoft Analytics</li>
+              <li class="tech-item">🐼 Pandas - Data Export & Aggregation</li>
+              <li class="tech-item">📋 CSV/Parquet - Interoperability Formats</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -509,6 +587,33 @@ graph TB
           <p class="feature-description">
             Seamless MLOps with MLflow and Feast. Track experiments, manage models, serve predictions, and maintain
             feature stores for ML workflows.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">BI Dashboard Exports</h3>
+          <p class="feature-description">
+            Automated analytics exports to Tableau, Looker, and Power BI. Query Snowflake warehouse for daily orders,
+            revenue trends, and customer segmentation with scheduled Pandas-based pipelines.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🏗️</div>
+          <h3 class="feature-title">Infrastructure as Code</h3>
+          <p class="feature-description">
+            Full IaC with Terraform for AWS (VPC, EKS, RDS, S3), Helm charts for Kubernetes deployment, and Argo CD
+            for GitOps continuous delivery. Reproducible infrastructure across all environments.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌀</div>
+          <h3 class="feature-title">DAG Orchestration</h3>
+          <p class="feature-description">
+            Three production Airflow DAGs: batch ingestion (MySQL → Spark → PostgreSQL), warehouse transformation
+            (staging → Snowflake star schema), and streaming monitoring with automated alerting and retry policies.
           </p>
         </div>
       </div>
@@ -660,6 +765,24 @@ graph LR
             Route optimization, fleet management, demand forecasting, delivery tracking, and real-time traffic analysis.
           </p>
         </div>
+
+        <div class="use-case-card">
+          <div class="use-case-icon">⚡</div>
+          <h3 class="use-case-title">Energy & Utilities</h3>
+          <p class="use-case-description">
+            Smart grid monitoring, energy consumption forecasting, renewable output optimization, outage prediction, and
+            demand-response management at scale.
+          </p>
+        </div>
+
+        <div class="use-case-card">
+          <div class="use-case-icon">🏛️</div>
+          <h3 class="use-case-title">Government & Public Sector</h3>
+          <p class="use-case-description">
+            Census data processing, public health monitoring, infrastructure planning, emergency response analytics, and
+            citizen services optimization.
+          </p>
+        </div>
       </div>
     </section>
 
@@ -677,6 +800,7 @@ graph LR
               <p>Get the source code from GitHub and navigate to the project directory</p>
               <div class="code-block">
                 <div class="code-header">
+                  <div class="mac-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
@@ -693,6 +817,7 @@ cd End-to-End-Data-Pipeline</code></pre>
               <p>Create environment file and launch all 20 services with Docker Compose</p>
               <div class="code-block">
                 <div class="code-header">
+                  <div class="mac-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
@@ -755,6 +880,7 @@ make up-lite</code></pre>
               <p>Trigger the batch ingestion DAG to see the full pipeline in action</p>
               <div class="code-block">
                 <div class="code-header">
+                  <div class="mac-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
@@ -777,6 +903,7 @@ make list-dags</code></pre>
               <p>The kafka-producer service auto-generates sensor data. Run Spark jobs for processing</p>
               <div class="code-block">
                 <div class="code-header">
+                  <div class="mac-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
@@ -799,6 +926,7 @@ make spark-stream</code></pre>
               <p>Deploy to any cloud or on-prem Kubernetes cluster via Helm chart</p>
               <div class="code-block">
                 <div class="code-header">
+                  <div class="mac-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
                   <span class="code-language">bash</span>
                   <button class="copy-button" onclick="copyCode(this)">📋 Copy</button>
                 </div>
@@ -820,37 +948,45 @@ make deploy-teardown</code></pre>
         </div>
       </div>
 
-      <div
-        style="
-          margin-top: 3rem;
-          padding: 2rem;
-          background: rgba(79, 172, 254, 0.1);
-          border-radius: 12px;
-          border: 1px solid rgba(79, 172, 254, 0.3);
-        "
-      >
-        <h3 style="margin-bottom: 1rem; font-size: 1.5rem">📚 Additional Resources</h3>
-        <ul style="list-style: none; color: var(--text-secondary)">
-          <li style="padding: 0.5rem 0">
-            📖 <a href="README.md" style="color: var(--primary-color)">Comprehensive README</a> - Detailed documentation
-          </li>
-          <li style="padding: 0.5rem 0">
-            🏗️ <a href="ARCHITECTURE.md" style="color: var(--primary-color)">Architecture Guide</a> - System design
-            details
-          </li>
-          <li style="padding: 0.5rem 0">
-            🚀 <a href="QUICK_START.md" style="color: var(--primary-color)">Quick Start Guide</a> - Fast deployment
-            commands
-          </li>
-          <li style="padding: 0.5rem 0">
-            📋 <a href="DEPLOYMENT_STRATEGIES.md" style="color: var(--primary-color)">Deployment Strategies</a> -
-            Blue/Green & Canary deployments
-          </li>
-          <li style="padding: 0.5rem 0">
-            📓 <a href="End_to_End_Data_Pipeline.ipynb" style="color: var(--primary-color)">Jupyter Notebook</a> -
-            Interactive tutorial
-          </li>
-        </ul>
+      <div class="resources-box">
+        <h3>📚 Additional Resources</h3>
+        <div class="resource-links">
+          <a href="README.md" class="resource-link">
+            <span class="resource-icon">📖</span>
+            <span class="resource-text">
+              <strong>Comprehensive README</strong>
+              <span>Detailed documentation</span>
+            </span>
+          </a>
+          <a href="ARCHITECTURE.md" class="resource-link">
+            <span class="resource-icon">🏗️</span>
+            <span class="resource-text">
+              <strong>Architecture Guide</strong>
+              <span>System design details</span>
+            </span>
+          </a>
+          <a href="QUICK_START.md" class="resource-link">
+            <span class="resource-icon">🚀</span>
+            <span class="resource-text">
+              <strong>Quick Start Guide</strong>
+              <span>Fast deployment commands</span>
+            </span>
+          </a>
+          <a href="DEPLOYMENT_STRATEGIES.md" class="resource-link">
+            <span class="resource-icon">📋</span>
+            <span class="resource-text">
+              <strong>Deployment Strategies</strong>
+              <span>Blue/Green &amp; Canary deployments</span>
+            </span>
+          </a>
+          <a href="End_to_End_Data_Pipeline.ipynb" class="resource-link">
+            <span class="resource-icon">📓</span>
+            <span class="resource-text">
+              <strong>Jupyter Notebook</strong>
+              <span>Interactive tutorial</span>
+            </span>
+          </a>
+        </div>
       </div>
     </section>
 
