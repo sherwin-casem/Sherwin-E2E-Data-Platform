@@ -156,8 +156,8 @@ Staging Tables --> Dimension Load (customers, products, dates, devices) --> Fact
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/sherwin-casem/sherwin-data-platform.git
-cd sherwin-data-platform
+git clone https://github.com/sherwin-casem/Sherwin-E2E-Data-Platform.git
+cd Sherwin-E2E-Data-Platform
 
 # 2. Create environment file
 cp .env.example .env

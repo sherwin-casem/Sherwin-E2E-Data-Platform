@@ -11,7 +11,7 @@ keywords:
   - kafka
   - snowflake
   - mlflow
-home: https://github.com/sherwin-casem/sherwin-data-platform
+home: https://github.com/sherwin-casem/Sherwin-E2E-Data-Platform
 maintainers:
   - name: Sherwin Casem
     url: https://github.com/sherwin-casem

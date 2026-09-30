@@ -8,8 +8,8 @@ authors:
   - family-names: "Casem"
     given-names: "Sherwin"
     orcid: "https://orcid.org/0009-0002-7806-068X"
-repository-code: "https://github.com/sherwin-casem/sherwin-data-platform"
-url: "https://github.com/sherwin-casem/sherwin-data-platform"
+repository-code: "https://github.com/sherwin-casem/Sherwin-E2E-Data-Platform"
+url: "https://github.com/sherwin-casem/Sherwin-E2E-Data-Platform"
 license: "MIT"
 keywords:
   - Data Science
