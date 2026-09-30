@@ -1,15 +1,15 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "End-to-End Data Pipeline"
+title: "Sherwin E2E Data Platform"
 version: "1.0.0"
 date-released: "2025-05-25"
 type: software
 authors:
-  - family-names: "Nguyen"
-    given-names: "Son"
+  - family-names: "Casem"
+    given-names: "Sherwin"
     orcid: "https://orcid.org/0009-0002-7806-068X"
-repository-code: "https://github.com/hoangsonww/End-to-End-Data-Pipeline"
-url: "https://github.com/hoangsonww/End-to-End-Data-Pipeline"
+repository-code: "https://github.com/sherwin-casem/sherwin-data-platform"
+url: "https://github.com/sherwin-casem/sherwin-data-platform"
 license: "MIT"
 keywords:
   - Data Science

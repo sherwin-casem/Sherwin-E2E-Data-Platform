@@ -1,6 +1,6 @@
 apiVersion: v2
-name: e2e-pipeline
-description: Enterprise E2E Data Pipeline - Batch, Streaming, Warehouse, ML, Monitoring
+name: sherwin-e2e-data-platform
+description: Sherwin E2E Data Platform - Batch, Streaming, Warehouse, ML, Monitoring
 version: 1.0.0
 appVersion: "2.0.0"
 type: application
@@ -11,10 +11,10 @@ keywords:
   - kafka
   - snowflake
   - mlflow
-home: https://github.com/hoangsonww/End-to-End-Data-Pipeline
+home: https://github.com/sherwin-casem/sherwin-data-platform
 maintainers:
-  - name: Son Nguyen
-    url: https://github.com/hoangsonww
+  - name: Sherwin Casem
+    url: https://github.com/sherwin-casem
 
 dependencies:
   - name: postgresql

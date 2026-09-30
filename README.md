@@ -1,4 +1,4 @@
-# End-to-End Data Pipeline
+# Sherwin E2E Data Platform
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![.NET](https://img.shields.io/badge/.NET_8-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
@@ -156,8 +156,8 @@ Staging Tables --> Dimension Load (customers, products, dates, devices) --> Fact
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/hoangsonww/End-to-End-Data-Pipeline.git
-cd End-to-End-Data-Pipeline
+git clone https://github.com/sherwin-casem/sherwin-data-platform.git
+cd sherwin-data-platform
 
 # 2. Create environment file
 cp .env.example .env
@@ -575,4 +575,4 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 
 ---
 
-For questions or feedback, reach out on [GitHub](https://github.com/hoangsonww).
+For questions or feedback, reach out on [GitHub](https://github.com/sherwin-casem).

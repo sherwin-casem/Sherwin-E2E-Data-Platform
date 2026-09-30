@@ -14,8 +14,8 @@ Get the E2E Data Pipeline running locally in under 5 minutes.
 ## 1. Clone & Configure
 
 ```bash
-git clone https://github.com/hoangsonww/End-to-End-Data-Pipeline.git
-cd End-to-End-Data-Pipeline
+git clone https://github.com/sherwin-casem/sherwin-data-platform.git
+cd sherwin-data-platform
 
 # Create environment file from template
 cp .env.example .env
@@ -183,8 +183,8 @@ make deploy-lite
 
 # Any VM (DigitalOcean droplet, bare metal, etc.)
 ssh your-server
-git clone https://github.com/hoangsonww/End-to-End-Data-Pipeline.git
-cd End-to-End-Data-Pipeline && cp .env.example .env
+git clone https://github.com/sherwin-casem/sherwin-data-platform.git
+cd sherwin-data-platform && cp .env.example .env
 make deploy-local
 ```
 
